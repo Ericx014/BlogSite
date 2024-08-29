@@ -12,8 +12,10 @@ namespace BlogSite.Api.Models
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
 
+        [JsonIgnore]
         [DataType(DataType.DateTime)]
         public DateTime DateCreated { get; set; }
+        [JsonIgnore]
         public DateTime? DateUpdated { get; set; } 
 
 
@@ -21,6 +23,7 @@ namespace BlogSite.Api.Models
         public int UserId { get; set; }
         [JsonIgnore]
         public User User { get; set; }
+        [JsonIgnore]
         public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
     }
 }

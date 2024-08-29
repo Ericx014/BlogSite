@@ -2,6 +2,7 @@
 using BlogSite.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using static BlogSite.Api.DTOs.UserDTO;
 
 namespace BlogSite.Api.NewFolder
@@ -36,8 +37,25 @@ namespace BlogSite.Api.NewFolder
             return Results.Ok(allUsers);
         }
 
-        private static async Task<IResult> CreateUser(BlogDbContext db, [FromBody] CreateUserRequest request)
+        private static async Task<IResult> CreateUser(BlogDbContext db, [FromBody] NewUserRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Username) || request.Username.Length < 6)
+            {
+                return Results.BadRequest("Username must be at least 6 characters long and cannot be empty.");
+            }
+
+            var passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+            if (string.IsNullOrWhiteSpace(request.Password) || !Regex.IsMatch(request.Password, passwordPattern))
+            {
+                return Results.BadRequest("Password must be at least 8 characters long, contain at least uppercase letter, one lowercase letter, one digit number and one special symbol.");
+            }
+
+            var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (string.IsNullOrWhiteSpace(request.Email) || !Regex.IsMatch(request.Email, emailPattern))
+            {
+                return Results.BadRequest("Invalid email format.");
+            }
+
             var user = new User
             {
                 Username = request.Username,
@@ -48,13 +66,6 @@ namespace BlogSite.Api.NewFolder
             db.Users.Add(user);
             await db.SaveChangesAsync();
             return Results.Created($"/user/{user.Id}", user);
-        }
-
-        public class CreateUserRequest
-        {
-            public string Username { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
         }
 
         private static async Task<IResult> DeleteUser(BlogDbContext db, int id)

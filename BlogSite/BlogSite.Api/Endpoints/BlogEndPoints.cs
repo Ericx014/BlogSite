@@ -1,7 +1,5 @@
 ﻿using BlogSite.Api.Data;
-//using BlogSite.Api.DTOs;
 using BlogSite.Api.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static BlogSite.Api.DTOs.BlogDTO;
@@ -12,13 +10,13 @@ namespace BlogSite.Api.Endpoints
     {
         public static void MapBlogEndpoints(this WebApplication app)
         {
-            app.MapGet("/blogs", GetAllBlogs);
+            app.MapGet("/blogs", GetAllBlogs).RequireAuthorization();
             app.MapGet("/blogs/user", GetUserBlogs).RequireAuthorization();
-            app.MapGet("/blogs/{id}", GetBlog);
-            app.MapPost("/blogs", CreateBlog);
-            app.MapDelete("/blogs", DeleteAllBlogs);
-            app.MapDelete("/blogs/{id}", DeleteBlog);
-            app.MapPut("/blogs/{id}", UpdateBlog);
+            app.MapGet("/blogs/{id}", GetBlog).RequireAuthorization();
+            app.MapPost("/blogs", CreateBlog).RequireAuthorization();
+            //app.MapDelete("/blogs", DeleteAllBlogs);
+            app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
+            app.MapPut("/blogs/{id}", UpdateBlog).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(HttpContext httpContext, BlogDbContext db, ClaimsPrincipal user)

@@ -7,14 +7,38 @@ const Register = () => {
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // if (!newUsername || newUsername.length < 6) {
+    //   console.error(
+    //     "Username must be at least 6 characters long and cannot be empty."
+    //   );
+    //   return;
+    // }
+
+    const passwordPattern =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    if (!newPassword || !passwordPattern.test(newPassword)) {
+      console.error(
+        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special symbol."
+      );
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       console.error("Passwords do not match.");
       return;
     }
+
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!newEmail || !emailPattern.test(newEmail)) {
+      console.error("Invalid email format.");
+      return;
+    }
+
     try {
       const response = await axios.post(`https://localhost:44352/users`, {
         username: newUsername,
@@ -25,7 +49,8 @@ const Register = () => {
       setNewEmail("");
       setNewPassword("");
       console.log("Registered new user:", response.data);
-			navigate("/")
+      navigate("/");
+			
     } catch (error) {
       console.error("Registration failed:", error);
     }
