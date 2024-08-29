@@ -1,5 +1,6 @@
 ﻿using BlogSite.Api.Data;
 using BlogSite.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static BlogSite.Api.DTOs.UserDTO;
 
@@ -35,12 +36,25 @@ namespace BlogSite.Api.NewFolder
             return Results.Ok(allUsers);
         }
 
-        private static async Task<IResult> CreateUser(BlogDbContext db, User user, string password)
+        private static async Task<IResult> CreateUser(BlogDbContext db, [FromBody] CreateUserRequest request)
         {
-            user.SetPassword(password);
+            var user = new User
+            {
+                Username = request.Username,
+                Email = request.Email,
+            };
+
+            user.SetPassword(request.Password);
             db.Users.Add(user);
             await db.SaveChangesAsync();
             return Results.Created($"/user/{user.Id}", user);
+        }
+
+        public class CreateUserRequest
+        {
+            public string Username { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
         }
 
         private static async Task<IResult> DeleteUser(BlogDbContext db, int id)
