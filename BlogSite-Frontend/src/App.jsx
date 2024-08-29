@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
+import {useState, createContext} from "react";
+import Blogs from "./Components/Blogs";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const BlogContext = createContext();
+
+const App = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BlogContext.Provider
+        value={{
+          token,
+          setToken,
+          blogs,
+          setBlogs,
+          username,
+          setUsername,
+          password,
+          setPassword,
+        }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<Login />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </BrowserRouter>
+      </BlogContext.Provider>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
