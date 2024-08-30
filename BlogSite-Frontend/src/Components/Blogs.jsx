@@ -1,50 +1,67 @@
 import {useEffect, useContext} from "react";
-import axios from "axios";
 import {BlogContext} from "../App";
 import {useNavigate} from "react-router-dom";
+import BlogServices from "../services/blogs";
 
 const Blogs = () => {
-  const {username, setUsername, token, setToken, blogs, setBlogs} =
-    useContext(BlogContext);
+  const {
+    username,
+    setUsername,
+    token,
+    setToken,
+    allBlogs,
+    setAllBlogs,
+		userBlogs,
+		setUserBlogs,
+    setNotification,
+    setNotificationType,
+  } = useContext(BlogContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      if (token) {
-        try {
-          const response = await axios.get(
-            "https://localhost:44352/blogs/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setBlogs(response.data);
-        } catch (error) {
-          console.error("Failed to fetch blogs:", error);
-        }
+  const fetchUserBlogs = async () => {
+    if (token) {
+      try {
+        const responseData = await BlogServices.getUserBlogs(token);
+        setUserBlogs(responseData);
+      } catch (error) {
+        console.error("Failed to fetch user blogs:", error);
       }
-    };
+    }
+  };
+  useEffect(() => {
+    fetchUserBlogs();
+  }, [token]);
 
-    fetchBlogs();
+  const fetchAllBlogs = async () => {
+    if (token) {
+      try {
+        const responseData = await BlogServices.getAllBlogs(token);
+        setAllBlogs(responseData);
+      } catch (error) {
+        console.error("Failed to fetch all blogs:", error);
+      }
+    }
+  };
+  useEffect(() => {
+    fetchAllBlogs();
   }, [token]);
 
   const userProfile = (
     <h1 className="font-bold text-lg mb-4">Username: {username}</h1>
   );
 
-  const blogsToDisplay = blogs.map((blog) => (
+  const blogsToDisplay = allBlogs.map((blog) => (
     <section key={blog.id} className="mb-5">
       <p>ID: {blog.id}</p>
       <p>Title: {blog.title}</p>
       <p>Content: {blog.content}</p>
+			<p>Written by: {blog.user}</p>
       <div>
         {blog.comments.map((comment) => (
           <div key={comment.id} className="comment">
             <p>Comment ID: {comment.id}</p>
             <p>Content: {comment.content}</p>
-            <p>Author: {comment.userId}</p>
+            <p>Commented by: {comment.userId}</p>
           </div>
         ))}
       </div>
@@ -53,10 +70,12 @@ const Blogs = () => {
 
   const handleLogout = () => {
     setToken("");
-    setBlogs([]);
+		setUserBlogs([]);
+    setAllBlogs([]);
     setUsername("");
+    setNotification("Logged out successfully");
+    setNotificationType("success");
     navigate("/");
-    console.log("Logged out");
   };
 
   const logoutButton = (

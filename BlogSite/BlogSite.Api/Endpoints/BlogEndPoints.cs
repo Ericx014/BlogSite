@@ -14,7 +14,7 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs/user", GetUserBlogs).RequireAuthorization();
             app.MapGet("/blogs/{id}", GetBlog).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
-            //app.MapDelete("/blogs", DeleteAllBlogs);
+            app.MapDelete("/blogs", DeleteAllBlogs);
             app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
             app.MapPut("/blogs/{id}", UpdateBlog).RequireAuthorization();
         }
@@ -34,6 +34,7 @@ namespace BlogSite.Api.Endpoints
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
+                    User = b.User.Username,
                     Comments = b.Comments.Select(c => new CommentSimpleDto
                     {
                         Id = c.Id,

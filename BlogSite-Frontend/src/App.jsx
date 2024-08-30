@@ -7,10 +7,13 @@ import Register from "./Components/Register";
 export const BlogContext = createContext();
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const [allBlogs, setAllBlogs] = useState([]);
+  const [userBlogs, setUserBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
+  const [notification, setNotification] = useState("");
+  const [notificationType, setNotificationType] = useState("");
 
   return (
     <>
@@ -18,12 +21,18 @@ const App = () => {
         value={{
           token,
           setToken,
-          blogs,
-          setBlogs,
+          allBlogs,
+          setAllBlogs,
+          userBlogs,
+          setUserBlogs,
           username,
           setUsername,
           password,
           setPassword,
+          notification,
+          setNotification,
+          notificationType,
+          setNotificationType,
         }}
       >
         <BrowserRouter>

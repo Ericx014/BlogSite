@@ -44,7 +44,7 @@ namespace BlogSite.Api.NewFolder
                 return Results.BadRequest("Username must be at least 6 characters long and cannot be empty.");
             }
 
-            var passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+            var passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!.@$%^&*-]).{8,}$";
             if (string.IsNullOrWhiteSpace(request.Password) || !Regex.IsMatch(request.Password, passwordPattern))
             {
                 return Results.BadRequest("Password must be at least 8 characters long, contain at least uppercase letter, one lowercase letter, one digit number and one special symbol.");
