@@ -1,8 +1,11 @@
 ﻿using BlogSite.Api.Data;
+using BlogSite.Api.DTOs;
 using BlogSite.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using static BlogSite.Api.DTOs.BlogDTO;
 using static BlogSite.Api.DTOs.UserDTO;
 
 namespace BlogSite.Api.NewFolder
@@ -15,6 +18,7 @@ namespace BlogSite.Api.NewFolder
             app.MapPost("/users", CreateUser);
             app.MapDelete("/users/{id}", DeleteUser);
             app.MapDelete("/users", DeleteAllUser);
+            app.MapGet("/users/search/{username}", GetUserByUsername);
         }
 
         private static async Task<IResult> GetAllUsers(BlogDbContext db)
@@ -86,6 +90,46 @@ namespace BlogSite.Api.NewFolder
             db.Users.RemoveRange(db.Users);
             await db.SaveChangesAsync();
             return Results.NoContent();
+        }
+
+        private static async Task<IResult> GetUserByUsername(BlogDbContext db, string username)
+        {
+            var user = await db.Users
+                .Include(u => u.Blogs)
+                .ThenInclude(b => b.Comments)
+                .Where(u => u.Username == username)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return Results.NotFound();
+            }
+
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Blogs = user.Blogs.Select(b => new BlogSimpleDto
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Content = b.Content,
+                    Comments = b.Comments.Select(c => new UserBlogCommentSimpleDto
+                    {
+                        Id = c.Id,
+                        Content = c.Content,
+                        CommentorId = c.UserId,
+                        CommentorUsername = db.Users
+                            .Where(u => u.Id == c.UserId)
+                            .Select(u => u.Username)
+                            .FirstOrDefault(),
+                        DateCreated = c.DateCreated
+                    }).ToList()
+                }).ToList()
+            };
+
+            return Results.Ok(userDto);
         }
     }
 }

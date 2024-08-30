@@ -9,6 +9,7 @@ export const BlogContext = createContext();
 const App = () => {
   const [allBlogs, setAllBlogs] = useState([]);
   const [userBlogs, setUserBlogs] = useState([]);
+	const [currentUser, setCurrentUser] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -33,6 +34,8 @@ const App = () => {
           setNotification,
           notificationType,
           setNotificationType,
+					currentUser,
+					setCurrentUser
         }}
       >
         <BrowserRouter>

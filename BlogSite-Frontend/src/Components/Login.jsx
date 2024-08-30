@@ -1,7 +1,8 @@
 import {useNavigate, Link} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {BlogContext} from "../App";
-import authService from "../services/login";
+import AuthServices from "../services/login";
+import UserServices from "../services/users";
 import LoginForm from "./LoginForm";
 import Notification from "./Notification";
 
@@ -16,6 +17,7 @@ const Login = () => {
     setNotification,
     notificationType,
     setNotificationType,
+		setCurrentUser
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
@@ -32,15 +34,18 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const responseData = await authService.login(username, password);
-      loginSuccess(responseData);
+      const responseData = await AuthServices.login(username, password);
+      loginSuccess(responseData, username);
     } catch (error) {
       loginFail(error);
     }
   };
-  const loginSuccess = (responseData) => {
+  const loginSuccess = async (responseData, loggedInUsername) => {
     setToken(responseData.token);
     setPassword("");
+		const loggedInUser = await UserServices.getUserByUsername(loggedInUsername);
+		console.log(loggedInUser);
+		setCurrentUser(loggedInUser);
     navigate("/blogs");
   };
   const loginFail = (error) => {

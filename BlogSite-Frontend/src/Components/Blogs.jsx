@@ -11,7 +11,6 @@ const Blogs = () => {
     setToken,
     allBlogs,
     setAllBlogs,
-		userBlogs,
 		setUserBlogs,
     setNotification,
     setNotificationType,
@@ -23,6 +22,7 @@ const Blogs = () => {
       try {
         const responseData = await BlogServices.getUserBlogs(token);
         setUserBlogs(responseData);
+				console.log(responseData);
       } catch (error) {
         console.error("Failed to fetch user blogs:", error);
       }

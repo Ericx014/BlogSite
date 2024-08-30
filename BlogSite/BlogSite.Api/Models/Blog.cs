@@ -8,6 +8,7 @@ namespace BlogSite.Api.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [JsonIgnore]
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
@@ -20,6 +21,7 @@ namespace BlogSite.Api.Models
 
 
         [ForeignKey("User")]
+        [JsonIgnore]
         public int UserId { get; set; }
         [JsonIgnore]
         public User User { get; set; }

@@ -34,12 +34,13 @@ namespace BlogSite.Api.Endpoints
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
-                    User = b.User.Username,
+                    Blogger = b.User,
                     Comments = b.Comments.Select(c => new CommentSimpleDto
                     {
                         Id = c.Id,
                         Content = c.Content,
-                        UserId = c.UserId
+                        UserId = c.UserId,
+                        DateCreated = c.DateCreated
                     }).ToList()
                 })
                 .ToListAsync();
@@ -58,6 +59,7 @@ namespace BlogSite.Api.Endpoints
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
+                    Blogger = b.User,
                     Comments = b.Comments.Select(c => new CommentSimpleDto
                     {
                         Id = c.Id,
@@ -82,7 +84,6 @@ namespace BlogSite.Api.Endpoints
             {
                 return Results.NotFound($"User with ID {userId} not found.");
             }
-
             blog.UserId = userId;
             db.Blogs.Add(blog);
             user.Blogs.Add(blog);

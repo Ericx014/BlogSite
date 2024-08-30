@@ -1,4 +1,6 @@
-﻿namespace BlogSite.Api.DTOs
+﻿using BlogSite.Api.Models;
+
+namespace BlogSite.Api.DTOs
 {
     public class BlogDTO
     {
@@ -7,7 +9,8 @@
             public int Id { get; set; }
             public string Title { get; set; }
             public string Content { get; set; }
-            public string User { get; set; }
+            //public string BloggerUsername { get; set; }
+            public User Blogger { get; set; }
             public ICollection<CommentSimpleDto> Comments { get; set; }
         }
 
@@ -16,6 +19,7 @@
             public int Id { get; set; }
             public string Content { get; set; }
             public int UserId { get; set; }
+            public DateTime DateCreated { get; set; }
         }
     }
 }

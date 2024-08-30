@@ -10,4 +10,9 @@ const addUser = async (username, email, password) => {
   return response.data;
 };
 
-export default {addUser};
+const getUserByUsername = async (username) => {
+  const response = await axios.get(`${baseUrl}/search/${username}`);
+  return response.data;
+};
+
+export default {addUser, getUserByUsername};
