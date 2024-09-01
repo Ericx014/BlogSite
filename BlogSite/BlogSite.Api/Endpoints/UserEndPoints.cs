@@ -1,11 +1,8 @@
 ﻿using BlogSite.Api.Data;
-using BlogSite.Api.DTOs;
 using BlogSite.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
-using static BlogSite.Api.DTOs.BlogDTO;
 using static BlogSite.Api.DTOs.UserDTO;
 
 namespace BlogSite.Api.NewFolder

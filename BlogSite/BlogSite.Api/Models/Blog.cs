@@ -10,8 +10,18 @@ namespace BlogSite.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonIgnore]
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; } = string.Empty;
+        [Required]
         public string Content { get; set; } = string.Empty;
+        [Required]
+        public string Category { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public int Likes { get; set; } = 0;
+
+        [JsonIgnore]
+        public int Dislikes { get; set; } = 0;
 
         [JsonIgnore]
         [DataType(DataType.DateTime)]
@@ -27,5 +37,8 @@ namespace BlogSite.Api.Models
         public User User { get; set; }
         [JsonIgnore]
         public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
+
+        [JsonIgnore]
+        public ICollection<BlogTag> BlogTags { get; set; } = new List<BlogTag>();
     }
 }

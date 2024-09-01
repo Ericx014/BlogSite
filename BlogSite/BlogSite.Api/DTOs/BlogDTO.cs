@@ -9,7 +9,6 @@ namespace BlogSite.Api.DTOs
             public int Id { get; set; }
             public string Title { get; set; }
             public string Content { get; set; }
-            //public string BloggerUsername { get; set; }
             public User Blogger { get; set; }
             public ICollection<CommentSimpleDto> Comments { get; set; }
         }

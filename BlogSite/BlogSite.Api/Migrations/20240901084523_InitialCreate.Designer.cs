@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogSite.Api.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20240816034249_UpdatedCommentModel")]
-    partial class UpdatedCommentModel
+    [Migration("20240901084523_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,10 @@ namespace BlogSite.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
@@ -44,6 +48,12 @@ namespace BlogSite.Api.Migrations
 
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Dislikes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -57,6 +67,21 @@ namespace BlogSite.Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("BlogSite.Api.Models.BlogTag", b =>
+                {
+                    b.Property<int>("BlogId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BlogId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("BlogTag");
                 });
 
             modelBuilder.Entity("BlogSite.Api.Models.Comment", b =>
@@ -89,6 +114,23 @@ namespace BlogSite.Api.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("BlogSite.Api.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("BlogSite.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -98,6 +140,10 @@ namespace BlogSite.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -127,6 +173,25 @@ namespace BlogSite.Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlogSite.Api.Models.BlogTag", b =>
+                {
+                    b.HasOne("BlogSite.Api.Models.Blog", "Blog")
+                        .WithMany("BlogTags")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BlogSite.Api.Models.Tag", "Tag")
+                        .WithMany("BlogTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("BlogSite.Api.Models.Comment", b =>
                 {
                     b.HasOne("BlogSite.Api.Models.Blog", "Blog")
@@ -148,7 +213,14 @@ namespace BlogSite.Api.Migrations
 
             modelBuilder.Entity("BlogSite.Api.Models.Blog", b =>
                 {
+                    b.Navigation("BlogTags");
+
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("BlogSite.Api.Models.Tag", b =>
+                {
+                    b.Navigation("BlogTags");
                 });
 
             modelBuilder.Entity("BlogSite.Api.Models.User", b =>
