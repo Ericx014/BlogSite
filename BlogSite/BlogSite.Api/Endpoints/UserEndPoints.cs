@@ -12,6 +12,8 @@ namespace BlogSite.Api.NewFolder
         public static void MapUserEndpoints(this WebApplication app)
         {
             app.MapGet("/users", GetAllUsers);
+            app.MapGet("/likedusers/blog/{blogId}", GetBlogLikedUsers);
+            app.MapGet("/dislikedusers/blog/{blogId}", GetBlogDislikedUsers);
             app.MapPost("/users", CreateUser);
             app.MapDelete("/users/{id}", DeleteUser);
             app.MapDelete("/users", DeleteAllUser);
@@ -37,6 +39,43 @@ namespace BlogSite.Api.NewFolder
                 .ToListAsync();
             return Results.Ok(allUsers);
         }
+
+        private static async Task<IResult> GetBlogLikedUsers(BlogDbContext db, int blogId)
+        {
+            var blog = await db.Blogs
+                .Include(b => b.BlogLikes)
+                .ThenInclude(bl => bl.User)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+            var likedUsers = blog.BlogLikes.Select(bl => new
+            {
+                Username = bl.User.Username
+            }).ToList();
+
+            return Results.Ok(likedUsers);
+        }
+
+        private static async Task<IResult> GetBlogDislikedUsers(BlogDbContext db, int blogId)
+        {
+            var blog = await db.Blogs
+                .Include(b => b.BlogDislikes)
+                .ThenInclude(bd => bd.User)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+            var dislikedUsers = blog.BlogDislikes.Select(bl => new
+            {
+                Username = bl.User.Username
+            }).ToList();
+
+            return Results.Ok(dislikedUsers);
+        }
+
 
         private static async Task<IResult> CreateUser(BlogDbContext db, [FromBody] NewUserRequest request)
         {

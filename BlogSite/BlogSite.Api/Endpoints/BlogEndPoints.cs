@@ -17,6 +17,8 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs/category/{category}", GetCategoryBlogs).RequireAuthorization();
             app.MapGet("/blogs/tag/{tagName}", GetTagBlogs).RequireAuthorization();
             app.MapGet("/blogs/{id}", GetBlog).RequireAuthorization();
+            app.MapGet("/blogs/userliked/{userId}", GetUserLikedBlogs).RequireAuthorization();
+            app.MapGet("/blogs/userdisliked/{userId}", GetUserDislikedBlogs).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
             app.MapDelete("/blogs", DeleteAllBlogs);
             app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
@@ -175,6 +177,46 @@ namespace BlogSite.Api.Endpoints
             return blog is not null ? Results.Ok(blog) : Results.NotFound();
         }
 
+        private static async Task<IResult> GetUserLikedBlogs(BlogDbContext db, int userId)
+        {
+            var user = await db.Users
+                .Include(u => u.BlogLikes)
+                .ThenInclude(bl => bl.Blog)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return Results.NotFound($"User with ID {userId} not found.");
+            }
+
+            var likedBlogs = user.BlogLikes.Select(bl => new 
+            {
+                Title = bl.Blog.Title,
+                Content = bl.Blog.Content
+            }).ToList();
+
+            return Results.Ok(likedBlogs);
+        }
+
+        private static async Task<IResult> GetUserDislikedBlogs(BlogDbContext db, int userId)
+        {
+            var user = await db.Users
+                .Include(u => u.BlogDislikes)
+                .ThenInclude(bl => bl.Blog)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return Results.NotFound($"User with ID {userId} not found.");
+            }
+
+            var likedBlogs = user.BlogDislikes.Select(bl => new
+            {
+                Title = bl.Blog.Title,
+                Content = bl.Blog.Content
+            }).ToList();
+
+            return Results.Ok(likedBlogs);
+        }
+
         private static async Task<IResult> CreateBlog(BlogDbContext db, [FromBody] CreateBlogRequest request)
         {
             var user = await db.Users.FindAsync(request.UserId);
@@ -235,18 +277,6 @@ namespace BlogSite.Api.Endpoints
             return Results.NotFound();
         }
 
-        //private static async Task<IResult> AddLike(BlogDbContext db, int id)
-        //{
-        //    var blog = await db.Blogs.FindAsync(id);
-        //    if (blog is not null)
-        //    {
-        //        blog.Likes++;
-        //        await db.SaveChangesAsync();
-        //        return Results.Ok(blog);
-        //    }
-        //    return Results.NotFound($"Blog with id of {id} is not found");
-        //}
-
         private static async Task<IResult> AddLike(BlogDbContext db, int blogId, int userId)
         {
             var user = await db.Users.FindAsync(userId);
@@ -302,18 +332,6 @@ namespace BlogSite.Api.Endpoints
             await db.SaveChangesAsync();
             return Results.Ok(new { Blog = blog, User = user, Message = "Dislike added successfully." });
         }
-
-        //private static async Task<IResult> AddDislike(BlogDbContext db, int id)
-        //{
-        //    var blog = await db.Blogs.FindAsync(id);
-        //    if (blog is not null)
-        //    {
-        //        blog.Dislikes++;
-        //        await db.SaveChangesAsync();
-        //        return Results.Ok(blog);
-        //    }
-        //    return Results.NotFound($"Blog with id of {id} is not found");
-        //}
 
         //private static async Task<IResult> RemoveLike(BlogDbContext db, int id)
         //{
