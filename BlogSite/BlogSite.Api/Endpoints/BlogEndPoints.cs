@@ -294,15 +294,15 @@ namespace BlogSite.Api.Endpoints
                 return Results.NotFound($"Blog with ID {blogId} not found.");
             }
 
-            var tag = blog.BlogTags.FirstOrDefault(bt => bt.Tag.TagName == tagName);
+            var foundBlogTag = blog.BlogTags.FirstOrDefault(bt => bt.Tag.TagName == tagName);
 
-            if (tag == null)
+            if (foundBlogTag == null)
             {
                 return Results.NotFound($"Tag with name '{tagName}' not found in the blog.");
             }
 
-            blog.BlogTags.Remove(tag);
-            db.BlogTag.Remove(tag);
+            blog.BlogTags.Remove(foundBlogTag);
+            db.BlogTag.Remove(foundBlogTag);
             await db.SaveChangesAsync();
             return Results.NoContent();
         }
