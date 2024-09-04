@@ -35,6 +35,8 @@ namespace BlogSite.Api.Endpoints
 
             var allBlogs = await db.Blogs
                 .Include(b => b.Comments)
+                .Include(b => b.BlogTags)
+                .ThenInclude(bt => bt.Tag)
                 .Select(b => new BlogDto
                 {
                     Id = b.Id,
@@ -49,11 +51,14 @@ namespace BlogSite.Api.Endpoints
                         DateCreated = c.DateCreated
                     }).ToList(),
                     Likes = b.Likes,
-                    Dislikes = b.Dislikes
+                    Dislikes = b.Dislikes,
+                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList() 
                 })
                 .ToListAsync();
+
             return Results.Ok(allBlogs);
         }
+
 
         private static async Task<IResult> GetUserBlogs(BlogDbContext db, ClaimsPrincipal user)
         {
@@ -118,14 +123,28 @@ namespace BlogSite.Api.Endpoints
             return blog is not null ? Results.Ok(blog) : Results.NotFound();
         }
 
-        private static async Task<IResult> CreateBlog(BlogDbContext db, Blog blog, int userId)
+        private static async Task<IResult> CreateBlog(BlogDbContext db, [FromBody] CreateBlogRequest request)
         {
-            var user = await db.Users.FindAsync(userId);
+            var user = await db.Users.FindAsync(request.UserId);
             if (user == null)
             {
-                return Results.NotFound($"User with ID {userId} not found.");
+                return Results.NotFound($"User with ID {request.UserId} not found.");
             }
-            blog.UserId = userId;
+            var blog = request.Blog;
+            blog.UserId = request.UserId;
+
+            foreach (var tagName in request.Tags)
+            {
+                var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
+                if (tag == null)
+                {
+                    tag = new Tag { TagName = tagName };
+                    db.Tags.Add(tag);
+                }
+                var blogTag = new BlogTag { Blog = blog, Tag = tag };
+                blog.BlogTags.Add(blogTag);
+            }
+
             db.Blogs.Add(blog);
             user.Blogs.Add(blog);
             await db.SaveChangesAsync();

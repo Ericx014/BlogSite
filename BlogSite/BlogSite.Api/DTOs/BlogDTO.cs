@@ -13,6 +13,7 @@ namespace BlogSite.Api.DTOs
             public ICollection<CommentSimpleDto> Comments { get; set; }
             public int Likes { get; set; }
             public int Dislikes { get; set; }
+            public List<string> Tags { get; set; }
         }
 
         public class CommentSimpleDto
