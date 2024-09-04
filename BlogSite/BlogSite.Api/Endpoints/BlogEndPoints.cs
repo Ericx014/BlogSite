@@ -1,4 +1,5 @@
 ﻿using BlogSite.Api.Data;
+using BlogSite.Api.DTOs;
 using BlogSite.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +15,17 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs", GetAllBlogs).RequireAuthorization();
             app.MapGet("/blogs/user", GetUserBlogs).RequireAuthorization();
             app.MapGet("/blogs/category/{category}", GetCategoryBlogs).RequireAuthorization();
+            app.MapGet("/blogs/tag/{tagName}", GetTagBlogs).RequireAuthorization();
             app.MapGet("/blogs/{id}", GetBlog).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
             app.MapDelete("/blogs", DeleteAllBlogs);
             app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
             app.MapPut("/blogs/{id}", UpdateBlog).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/AddLike", AddLike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/AddDislike", AddDislike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/RemoveLike", RemoveLike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/RemoveDislike", RemoveDislike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/addlike", AddLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/adddislike", AddDislike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/removelike", RemoveLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/removedislike", RemoveDislike).RequireAuthorization();
+            app.MapDelete("/blogs/removetag/{blogId}/{tagName}", RemoveTagFromBlog).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(BlogDbContext db, ClaimsPrincipal user)
@@ -37,13 +40,13 @@ namespace BlogSite.Api.Endpoints
                 .Include(b => b.Comments)
                 .Include(b => b.BlogTags)
                 .ThenInclude(bt => bt.Tag)
-                .Select(b => new BlogDto
+                .Select(b => new BlogDTO.BlogDto
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
                     Blogger = b.User,
-                    Comments = b.Comments.Select(c => new CommentSimpleDto
+                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
                     {
                         Id = c.Id,
                         Content = c.Content,
@@ -67,13 +70,13 @@ namespace BlogSite.Api.Endpoints
             var allBlogs = await db.Blogs
                 .Include(b => b.Comments)
                 .Where(b => b.User.Username == currentUsername)
-                .Select(b => new BlogDto
+                .Select(b => new BlogDTO.BlogDto
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
                     Blogger = b.User,
-                    Comments = b.Comments.Select(c => new CommentSimpleDto
+                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
                     {
                         Id = c.Id,
                         Content = c.Content,
@@ -94,13 +97,13 @@ namespace BlogSite.Api.Endpoints
             var categoryBlogs = await db.Blogs
                 .Include(b => b.Comments)
                 .Where(b => b.Category == category)
-                .Select(b => new BlogDto
+                .Select(b => new BlogDTO.BlogDto
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
                     Blogger = b.User,
-                    Comments = b.Comments.Select(c => new CommentSimpleDto
+                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
                     {
                         Id = c.Id,
                         Content = c.Content,
@@ -115,6 +118,55 @@ namespace BlogSite.Api.Endpoints
             }    
 
             return Results.Ok(categoryBlogs);
+        }
+
+        private static async Task<IResult> GetTagBlogs(BlogDbContext db, string tagName)
+        {
+            if (string.IsNullOrWhiteSpace(tagName))
+            {
+                return Results.BadRequest("Tag cannot be empty.");
+            }
+
+            var tagEntity = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
+            if (tagEntity == null) 
+            {
+                return Results.NotFound($"No blogs with tag {tagName} found.");
+            }
+
+            var blogIdWithTag = await db.BlogTag
+                .Where(bt => bt.TagId == tagEntity.Id)
+                .Select(bt => bt.BlogId)
+                .ToListAsync();
+
+            var blogs = await db.Blogs
+                .Where(b => blogIdWithTag.Contains(b.Id))
+                .Include(b => b.Comments)
+                .Include(b => b.BlogTags).ThenInclude(bt => bt.Tag)
+                .Select(b => new BlogDTO.BlogDto
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Content = b.Content,
+                    Blogger = b.User,
+                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
+                    {
+                        Id = c.Id,
+                        Content = c.Content,
+                        UserId = c.UserId,
+                        DateCreated = c.DateCreated
+                    }).ToList(),
+                    Likes = b.Likes,
+                    Dislikes = b.Dislikes,
+                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList()
+                })
+                .ToListAsync();
+
+            if (!blogs.Any())
+            {
+                return Results.NotFound($"No blogs found for tag {tagName}.");
+            }
+
+            return Results.Ok(blogs);
         }
 
         private static async Task<IResult> GetBlog(BlogDbContext db, int id)
@@ -229,6 +281,30 @@ namespace BlogSite.Api.Endpoints
                 return Results.Ok(blog);
             }
             return Results.NotFound($"Blog with id of {id} is not found");
+        }
+
+        public static async Task<IResult> RemoveTagFromBlog(BlogDbContext db, int blogId, string tagName)
+        {
+            var blog = await db.Blogs
+                .Include(b => b.BlogTags).ThenInclude(bt => bt.Tag)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+
+            var tag = blog.BlogTags.FirstOrDefault(bt => bt.Tag.TagName == tagName);
+
+            if (tag == null)
+            {
+                return Results.NotFound($"Tag with name '{tagName}' not found in the blog.");
+            }
+
+            blog.BlogTags.Remove(tag);
+            db.BlogTag.Remove(tag);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
         }
     }
 }

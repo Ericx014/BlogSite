@@ -94,5 +94,6 @@ app.MapBlogEndpoints();
 app.MapUserEndpoints();
 app.MapCommentEndPoints();
 app.MapLoginEndpoints();
+app.MapTagEndpoints();
 
 app.Run();
