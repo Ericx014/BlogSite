@@ -20,7 +20,11 @@ namespace BlogSite.Api.Models
         public ICollection<Blog>? Blogs { get; set; } = new List<Blog>();
         [JsonIgnore]
         public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
-    
+
+        [JsonIgnore]
+        public ICollection<BlogLike> BlogLikes { get; set; } = new List<BlogLike>();
+        [JsonIgnore]
+        public ICollection<BlogDislike> BlogDislikes { get; set; } = new List<BlogDislike>();
         public void SetPassword(string password)
         {
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);

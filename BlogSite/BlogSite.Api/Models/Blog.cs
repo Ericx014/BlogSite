@@ -18,17 +18,16 @@ namespace BlogSite.Api.Models
         public string Category { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public int Likes { get; set; } = 0;
-
+        public ICollection<BlogLike> BlogLikes { get; set; } = new List<BlogLike>();
+       
         [JsonIgnore]
-        public int Dislikes { get; set; } = 0;
+        public ICollection<BlogDislike> BlogDislikes { get; set; } = new List<BlogDislike>();
 
         [JsonIgnore]
         [DataType(DataType.DateTime)]
         public DateTime DateCreated { get; set; }
         [JsonIgnore]
         public DateTime? DateUpdated { get; set; } 
-
 
         [ForeignKey("User")]
         [JsonIgnore]

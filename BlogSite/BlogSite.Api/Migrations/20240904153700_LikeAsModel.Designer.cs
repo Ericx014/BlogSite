@@ -3,6 +3,7 @@ using System;
 using BlogSite.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogSite.Api.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904153700_LikeAsModel")]
+    partial class LikeAsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,36 +63,6 @@ namespace BlogSite.Api.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("BlogSite.Api.Models.BlogDislike", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BlogId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BlogDislikes");
-                });
-
-            modelBuilder.Entity("BlogSite.Api.Models.BlogLike", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BlogId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BlogLikes");
-                });
-
             modelBuilder.Entity("BlogSite.Api.Models.BlogTag", b =>
                 {
                     b.Property<int>("BlogId")
@@ -133,6 +106,29 @@ namespace BlogSite.Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BlogSite.Api.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("BlogSite.Api.Models.Tag", b =>
@@ -194,44 +190,6 @@ namespace BlogSite.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogSite.Api.Models.BlogDislike", b =>
-                {
-                    b.HasOne("BlogSite.Api.Models.Blog", "Blog")
-                        .WithMany("BlogDislikes")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BlogSite.Api.Models.User", "User")
-                        .WithMany("BlogDislikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BlogSite.Api.Models.BlogLike", b =>
-                {
-                    b.HasOne("BlogSite.Api.Models.Blog", "Blog")
-                        .WithMany("BlogLikes")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BlogSite.Api.Models.User", "User")
-                        .WithMany("BlogLikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BlogSite.Api.Models.BlogTag", b =>
                 {
                     b.HasOne("BlogSite.Api.Models.Blog", "Blog")
@@ -270,15 +228,32 @@ namespace BlogSite.Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlogSite.Api.Models.Like", b =>
+                {
+                    b.HasOne("BlogSite.Api.Models.Blog", "Blog")
+                        .WithMany("Likes")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BlogSite.Api.Models.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BlogSite.Api.Models.Blog", b =>
                 {
-                    b.Navigation("BlogDislikes");
-
-                    b.Navigation("BlogLikes");
-
                     b.Navigation("BlogTags");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("BlogSite.Api.Models.Tag", b =>
@@ -288,13 +263,11 @@ namespace BlogSite.Api.Migrations
 
             modelBuilder.Entity("BlogSite.Api.Models.User", b =>
                 {
-                    b.Navigation("BlogDislikes");
-
-                    b.Navigation("BlogLikes");
-
                     b.Navigation("Blogs");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,9 +11,10 @@ namespace BlogSite.Api.Data
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Tag> Tags {  get; set; }
-
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<BlogTag> BlogTag { get; set; }
+        public DbSet<BlogLike> BlogLikes { get; set; }
+        public DbSet<BlogDislike> BlogDislikes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,7 +28,7 @@ namespace BlogSite.Api.Data
                 .HasMany(b => b.Comments)
                 .WithOne(c => c.Blog)
                 .HasForeignKey(c => c.BlogId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);                
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Comments)
@@ -59,6 +60,32 @@ namespace BlogSite.Api.Data
                 .HasOne(bt => bt.Tag)
                 .WithMany(t => t.BlogTags)
                 .HasForeignKey(bt => bt.TagId);
+
+            modelBuilder.Entity<BlogLike>()
+                .HasKey(bl => new {bl.BlogId, bl.UserId});
+
+            modelBuilder.Entity<BlogLike>()
+                .HasOne(bl => bl.Blog)
+                .WithMany(b => b.BlogLikes)
+                .HasForeignKey(bl => bl.BlogId);
+
+            modelBuilder.Entity<BlogLike>()
+                .HasOne(bl => bl.User)
+                .WithMany(u => u.BlogLikes)
+                .HasForeignKey(bl => bl.UserId);
+
+            modelBuilder.Entity<BlogDislike>()
+                .HasKey(bd => new { bd.BlogId, bd.UserId });
+
+            modelBuilder.Entity<BlogDislike>()
+                .HasOne(bd => bd.Blog)
+                .WithMany(b => b.BlogDislikes)
+                .HasForeignKey(bd => bd.BlogId);
+
+            modelBuilder.Entity<BlogDislike>()
+                .HasOne(bd => bd.User)
+                .WithMany(u => u.BlogDislikes)
+                .HasForeignKey(bd => bd.UserId);
         }
     }
 }
