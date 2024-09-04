@@ -19,9 +19,10 @@ namespace BlogSite.Api.Endpoints
             app.MapDelete("/blogs", DeleteAllBlogs);
             app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
             app.MapPut("/blogs/{id}", UpdateBlog).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/like", AddLike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/dislike", AddDislike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/like", RemoveLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/AddLike", AddLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/AddDislike", AddDislike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/RemoveLike", RemoveLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/RemoveDislike", RemoveDislike).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(BlogDbContext db, ClaimsPrincipal user)
@@ -46,7 +47,9 @@ namespace BlogSite.Api.Endpoints
                         Content = c.Content,
                         UserId = c.UserId,
                         DateCreated = c.DateCreated
-                    }).ToList()
+                    }).ToList(),
+                    Likes = b.Likes,
+                    Dislikes = b.Dislikes
                 })
                 .ToListAsync();
             return Results.Ok(allBlogs);
@@ -188,11 +191,24 @@ namespace BlogSite.Api.Endpoints
         private static async Task<IResult> RemoveLike(BlogDbContext db, int id)
         {
             var blog = await db.Blogs.FindAsync(id);
-            if (blog is not null )
+            if (blog is not null)
             {
-                if ()
+                blog.Likes--;
+                await db.SaveChangesAsync();
+                return Results.Ok(blog);
             }
+            return Results.NotFound($"Blog with id of {id} is not found");
+        }
 
+        private static async Task<IResult> RemoveDislike(BlogDbContext db, int id)
+        {
+            var blog = await db.Blogs.FindAsync(id);
+            if (blog is not null)
+            {
+                blog.Dislikes--;
+                await db.SaveChangesAsync();
+                return Results.Ok(blog);
+            }
             return Results.NotFound($"Blog with id of {id} is not found");
         }
     }

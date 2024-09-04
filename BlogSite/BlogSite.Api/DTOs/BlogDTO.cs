@@ -11,6 +11,8 @@ namespace BlogSite.Api.DTOs
             public string Content { get; set; }
             public User Blogger { get; set; }
             public ICollection<CommentSimpleDto> Comments { get; set; }
+            public int Likes { get; set; }
+            public int Dislikes { get; set; }
         }
 
         public class CommentSimpleDto
