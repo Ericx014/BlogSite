@@ -95,5 +95,6 @@ app.MapUserEndpoints();
 app.MapCommentEndPoints();
 app.MapLoginEndpoints();
 app.MapTagEndpoints();
+app.MapLikeEndpoints();
 
 app.Run();

@@ -1,9 +1,6 @@
 ﻿using BlogSite.Api.Data;
-using BlogSite.Api.DTOs;
 using BlogSite.Api.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace BlogSite.Api.Endpoints
 {
