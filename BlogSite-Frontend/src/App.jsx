@@ -3,6 +3,7 @@ import {useState, createContext} from "react";
 import Blogs from "./Components/Blogs";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import BlogForm from "./Components/BlogForm";
 
 export const BlogContext = createContext();
 
@@ -34,8 +35,8 @@ const App = () => {
           setNotification,
           notificationType,
           setNotificationType,
-					currentUser,
-					setCurrentUser
+          currentUser,
+          setCurrentUser,
         }}
       >
         <BrowserRouter>
@@ -43,6 +44,7 @@ const App = () => {
             <Route index element={<Login />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/blogform" element={<BlogForm />} />
           </Routes>
         </BrowserRouter>
       </BlogContext.Provider>
