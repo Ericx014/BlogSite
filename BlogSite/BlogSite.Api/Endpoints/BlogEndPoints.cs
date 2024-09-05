@@ -220,7 +220,15 @@ namespace BlogSite.Api.Endpoints
             var blog = request.Blog;
             blog.UserId = request.UserId;
 
-            foreach (var tagName in request.Tags)
+            //var existingBlogTagsList = await db.BlogTag
+            //    .Where(bt => bt.BlogId == blog.Id)
+            //    .Select(bt => bt.Tag.TagName)
+            //    .ToListAsync();
+
+            //var existingBlogTags = new HashSet<string>(existingBlogTagsList);
+            
+            var tagsToAdd = new HashSet<string>(request.Tags);
+            foreach (var tagName in tagsToAdd)
             {
                 var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
                 if (tag == null)
