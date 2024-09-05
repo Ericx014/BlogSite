@@ -25,8 +25,8 @@ namespace BlogSite.Api.Endpoints
             app.MapPut("/blogs/{id}", UpdateBlog).RequireAuthorization();
             app.MapPost("/blogs/{blogId}/addlike/{userId}", AddLike).RequireAuthorization();
             app.MapPost("/blogs/{blogId}/adddislike/{userId}", AddDislike).RequireAuthorization();
-            //app.MapPatch("/blogs/{id}/removelike", RemoveLike).RequireAuthorization();
-            //app.MapPatch("/blogs/{id}/removedislike", RemoveDislike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/removelike{userId}", RemoveLike).RequireAuthorization();
+            app.MapPatch("/blogs/{id}/removedislike{userId}", RemoveDislike).RequireAuthorization();
             app.MapDelete("/blogs/removetag/{blogId}/{tagName}", RemoveTagFromBlog).RequireAuthorization();
         }
 
@@ -333,30 +333,65 @@ namespace BlogSite.Api.Endpoints
             return Results.Ok(new { Blog = blog, User = user, Message = "Dislike added successfully." });
         }
 
-        //private static async Task<IResult> RemoveLike(BlogDbContext db, int id)
-        //{
-        //    var blog = await db.Blogs.FindAsync(id);
-        //    if (blog is not null)
-        //    {
-        //        blog.Likes--;
-        //        await db.SaveChangesAsync();
-        //        return Results.Ok(blog);
-        //    }
-        //    return Results.NotFound($"Blog with id of {id} is not found");
-        //}
+        public static async Task<IResult> RemoveLike(BlogDbContext db, int blogId, int userId)
+        {
+            var user = await db.Users.FindAsync(userId);
+            if (user is null)
+            {
+                return Results.NotFound($"User with ID {userId} not found.");
+            }
 
-        //private static async Task<IResult> RemoveDislike(BlogDbContext db, int id)
-        //{
-        //    var blog = await db.Blogs.FindAsync(id);
-        //    if (blog is not null)
-        //    {
-        //        blog.Dislikes--;
-        //        await db.SaveChangesAsync();
-        //        return Results.Ok(blog);
-        //    }
-        //    return Results.NotFound($"Blog with id of {id} is not found");
-        //}
+            var blog = await db.Blogs
+                .Include(b => b.BlogLikes)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
 
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+
+            var blogLike = blog.BlogLikes.FirstOrDefault(bl => bl.UserId == userId);
+            if (blogLike == null)
+            {
+                return Results.BadRequest("User has not liked this blog.");
+            }
+            blog.BlogLikes.Remove(blogLike);
+            user.BlogLikes.Remove(blogLike);
+            db.BlogLikes.Remove(blogLike);
+
+            await db.SaveChangesAsync();
+            return Results.Ok(new { Blog = blog, User = user, Message = "Like removed successfully." });
+        }
+
+        public static async Task<IResult> RemoveDislike(BlogDbContext db, int blogId, int userId)
+        {
+            var user = await db.Users.FindAsync(userId);
+            if (user is null)
+            {
+                return Results.NotFound($"User with ID {userId} not found.");
+            }
+
+            var blog = await db.Blogs
+                .Include(b => b.BlogLikes)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+
+            var blogDislike = blog.BlogDislikes.FirstOrDefault(bl => bl.UserId == userId);
+            if (blogDislike == null)
+            {
+                return Results.BadRequest("User has not liked this blog.");
+            }
+            blog.BlogDislikes.Remove(blogDislike);
+            user.BlogDislikes.Remove(blogDislike);
+            db.BlogDislikes.Remove(blogDislike);
+
+            await db.SaveChangesAsync();
+            return Results.Ok(new { Blog = blog, User = user, Message = "Dislike removed successfully." });
+        }
         public static async Task<IResult> RemoveTagFromBlog(BlogDbContext db, int blogId, string tagName)
         {
             var blog = await db.Blogs
