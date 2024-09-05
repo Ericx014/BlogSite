@@ -20,9 +20,9 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs/userliked/{userId}", GetUserLikedBlogs).RequireAuthorization();
             app.MapGet("/blogs/userdisliked/{userId}", GetUserDislikedBlogs).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
-            app.MapDelete("/blogs", DeleteAllBlogs);
-            app.MapDelete("/blogs/{id}", DeleteBlog).RequireAuthorization();
-            app.MapPut("/blogs/updateblog/{id}", UpdateBlog).RequireAuthorization();
+            //app.MapDelete("/blogs", DeleteAllBlogs);
+            app.MapDelete("/blogs/deleteblog/{blogId}/{userId}", DeleteBlog).RequireAuthorization();
+            app.MapPatch("/blogs/updateblogcontent/{blogId}/{userId}", UpdateBlogContent).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(BlogDbContext db, ClaimsPrincipal user)
@@ -58,8 +58,6 @@ namespace BlogSite.Api.Endpoints
 
             return Results.Ok(allBlogs);
         }
-
-
         private static async Task<IResult> GetUserBlogs(BlogDbContext db, ClaimsPrincipal user)
         {
             var currentUsername = user.FindFirstValue("Username");
@@ -247,28 +245,52 @@ namespace BlogSite.Api.Endpoints
             return Results.NoContent();
         }
 
-        private static async Task<IResult> DeleteBlog(BlogDbContext db, int id)
+        private static async Task<IResult> DeleteBlog(BlogDbContext db, int blogId, int userId)
         {
-            var blog = await db.Blogs.FindAsync(id);
-            if (blog is not null)
+            var user = await db.Users.FindAsync(userId);
+            if (user == null)
             {
-                db.Blogs.Remove(blog);
-                await db.SaveChangesAsync();
-                return Results.NoContent();
+                return Results.NotFound($"User with ID {userId} not found.");
             }
-            return Results.NotFound();
+
+            var blog = await db.Blogs.FindAsync(blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+
+            if (blog.UserId != userId)
+            {
+                return Results.BadRequest("Blogs can only be deleted by authors");
+            }
+
+            await db.SaveChangesAsync();
+            return Results.NoContent();
         }
 
-        private static async Task<IResult> UpdateBlog(BlogDbContext db, int id, [FromBody] Blog updatedBlog)
+        private static async Task<IResult> UpdateBlogContent(BlogDbContext db, int blogId, int userId, [FromBody] Blog updatedBlog)
         {
-            var blog = await db.Blogs.FindAsync(id);
-            if (blog is not null)
+            var user = await db.Users.FindAsync(userId);
+            if (user == null)
             {
-                blog.Content = updatedBlog.Content;
-                blog.DateUpdated = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-                return Results.NoContent();
+                return Results.NotFound($"User with ID {userId} not found.");
             }
+
+            var blog = await db.Blogs.FindAsync(blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+
+            if (blog.UserId != userId)
+            {
+                return Results.BadRequest("Blogs can only be editted by authors");
+            }
+
+            blog.Content = updatedBlog.Content;
+            blog.DateUpdated = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+
             return Results.NotFound();
         }
     }
