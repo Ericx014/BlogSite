@@ -220,15 +220,8 @@ namespace BlogSite.Api.Endpoints
             var blog = request.Blog;
             blog.UserId = request.UserId;
 
-            //var existingBlogTagsList = await db.BlogTag
-            //    .Where(bt => bt.BlogId == blog.Id)
-            //    .Select(bt => bt.Tag.TagName)
-            //    .ToListAsync();
-
-            //var existingBlogTags = new HashSet<string>(existingBlogTagsList);
-            
-            var tagsToAdd = new HashSet<string>(request.Tags);
-            foreach (var tagName in tagsToAdd)
+            var uniqueTagsToAdd = new HashSet<string>(request.Tags);
+            foreach (var tagName in uniqueTagsToAdd)
             {
                 var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
                 if (tag == null)
@@ -236,8 +229,15 @@ namespace BlogSite.Api.Endpoints
                     tag = new Tag { TagName = tagName };
                     db.Tags.Add(tag);
                 }
-                var blogTag = new BlogTag { Blog = blog, Tag = tag };
-                blog.BlogTags.Add(blogTag);
+                if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
+                {
+                    var blogTag = new BlogTag { Blog = blog, Tag = tag };
+                    blog.BlogTags.Add(blogTag);
+                }
+                else
+                {
+                    return Results.BadRequest("Cannot duplicate BlogTag");
+                }
             }
 
             db.Blogs.Add(blog);

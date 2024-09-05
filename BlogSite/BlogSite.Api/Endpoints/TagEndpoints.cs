@@ -40,7 +40,8 @@ namespace BlogSite.Api.Endpoints
                 return Results.BadRequest("Only authors can add tags");
             }
 
-            foreach (var tagName in tags)
+            var uniqueTagNames = new HashSet<string>(tags);
+            foreach (var tagName in uniqueTagNames)
             {
                 var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
                 if (tag == null)
@@ -48,8 +49,15 @@ namespace BlogSite.Api.Endpoints
                     tag = new Tag { TagName = tagName };
                     db.Tags.Add(tag);
                 }
-                var blogTag = new BlogTag { Blog = blog, Tag = tag };
-                blog.BlogTags.Add(blogTag);
+                if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
+                {
+                    var blogTag = new BlogTag { Blog = blog, Tag = tag };
+                    blog.BlogTags.Add(blogTag);
+                }
+                else
+                {
+                    return Results.BadRequest("Cannot duplicate BlogTag");
+                }
             }
             await db.SaveChangesAsync();
             return Results.NoContent();
