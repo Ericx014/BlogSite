@@ -11,8 +11,8 @@ namespace BlogSite.Api.Endpoints
     {
         public static void MapTagEndpoints(this WebApplication app) {
             app.MapGet("/tags", GetAllTags);
-            app.MapPost("/blogs/addtag/{blogId}/{userId}", AddTagToBlog).RequireAuthorization();
-            app.MapDelete("/blogs/removetag/{blogId}/{userId}", RemoveTagFromBlog).RequireAuthorization();
+            app.MapPost("/blogs/{blogId}/tags", AddTagToBlog).RequireAuthorization();
+            app.MapDelete("/blogs/{blogId}/tags/{tagName}", RemoveTagFromBlog).RequireAuthorization();
         }
 
         public static async Task<IResult> GetAllTags (BlogDbContext db)
@@ -52,7 +52,7 @@ namespace BlogSite.Api.Endpoints
                 if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
                 {
                     var blogTag = new BlogTag { Blog = blog, Tag = tag };
-                    blog.BlogTags.Add(blogTag);
+                    db.BlogTag.Add(blogTag);
                 }
                 else
                 {
@@ -60,7 +60,7 @@ namespace BlogSite.Api.Endpoints
                 }
             }
             await db.SaveChangesAsync();
-            return Results.NoContent();
+            return Results.Created($"/blogs/{blogId}", new { uniqueTagNames, blog, message = "Tags added to blog successfully" });
         }
 
         public static async Task<IResult> RemoveTagFromBlog(BlogDbContext db, int blogId, int userId, string tagName)

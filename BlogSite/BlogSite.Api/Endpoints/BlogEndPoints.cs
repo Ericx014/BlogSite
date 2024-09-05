@@ -17,12 +17,12 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs/category/{category}", GetCategoryBlogs).RequireAuthorization();
             app.MapGet("/blogs/tag/{tagName}", GetTagBlogs).RequireAuthorization();
             app.MapGet("/blogs/{id}", GetBlog).RequireAuthorization();
-            app.MapGet("/blogs/userliked/{userId}", GetUserLikedBlogs).RequireAuthorization();
-            app.MapGet("/blogs/userdisliked/{userId}", GetUserDislikedBlogs).RequireAuthorization();
+            app.MapGet("/blogs/{userId}/userliked", GetUserLikedBlogs).RequireAuthorization();
+            app.MapGet("/blogs/{userId}/userdisliked/", GetUserDislikedBlogs).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
             //app.MapDelete("/blogs", DeleteAllBlogs);
-            app.MapDelete("/blogs/deleteblog/{blogId}/{userId}", DeleteBlog).RequireAuthorization();
-            app.MapPatch("/blogs/updateblogcontent/{blogId}/{userId}", UpdateBlogContent).RequireAuthorization();
+            app.MapDelete("/blogs/{blogId}/{userId}", DeleteBlog).RequireAuthorization();
+            app.MapPatch("/blogs/{blogId}/{userId}", UpdateBlogContent).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(BlogDbContext db, ClaimsPrincipal user)
@@ -232,18 +232,17 @@ namespace BlogSite.Api.Endpoints
                 if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
                 {
                     var blogTag = new BlogTag { Blog = blog, Tag = tag };
-                    blog.BlogTags.Add(blogTag);
+                    db.BlogTag.Add(blogTag);
                 }
                 else
                 {
-                    return Results.BadRequest("Cannot duplicate BlogTag");
+                    return Results.BadRequest("BlogTag cannot be duplicated");
                 }
             }
-
             db.Blogs.Add(blog);
             user.Blogs.Add(blog);
             await db.SaveChangesAsync();
-            return Results.Created($"/blogs/{blog.Id}", blog);
+            return Results.Created($"/blogs/{blog.Id}", new { blog, message="Blog created successfully"});
         }
 
         private static async Task<IResult> DeleteAllBlogs(BlogDbContext db)
@@ -271,7 +270,7 @@ namespace BlogSite.Api.Endpoints
             {
                 return Results.BadRequest("Blogs can only be deleted by authors");
             }
-
+            db.Blogs.Remove(blog);
             await db.SaveChangesAsync();
             return Results.NoContent();
         }
@@ -299,7 +298,7 @@ namespace BlogSite.Api.Endpoints
             blog.DateUpdated = DateTime.UtcNow;
             await db.SaveChangesAsync();
 
-            return Results.NotFound();
+            return Results.NoContent();
         }
     }
 }
