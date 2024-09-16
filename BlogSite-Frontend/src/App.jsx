@@ -1,21 +1,49 @@
 import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
-import {useState, createContext} from "react";
+import {useState, useEffect, createContext} from "react";
 import Blogs from "./Components/Blogs";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import BlogForm from "./Components/BlogForm";
+import BlogPage from "./Components/BlogPage";
+import BlogServices from "./services/blogs"
 
 export const BlogContext = createContext();
 
 const App = () => {
   const [allBlogs, setAllBlogs] = useState([]);
   const [userBlogs, setUserBlogs] = useState([]);
-	const [currentUser, setCurrentUser] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("");
+
+  const storedUser = JSON.parse(localStorage.getItem("blogUser")) || null;
+  const [currentUser, setCurrentUser] = useState(storedUser);
+
+  const storedToken = JSON.parse(localStorage.getItem("blogsiteToken")) || null;
+  const [token, setToken] = useState(storedToken);
+
+	const storedCurrentBlogId = JSON.parse(localStorage.getItem("currentBlogId")) || null;
+	const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (storedToken) {
+        try {
+          const allBlogsData = await BlogServices.getAllBlogs(storedToken);
+          setAllBlogs(allBlogsData);
+          if (storedUser) {
+            const userBlogsData = await BlogServices.getUserBlogs(storedToken);
+            setUserBlogs(userBlogsData);
+          }
+        } catch (error) {
+          console.error("Failed to fetch blogs:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -37,6 +65,8 @@ const App = () => {
           setNotificationType,
           currentUser,
           setCurrentUser,
+          currentBlogId,
+          setCurrentBlogId,
         }}
       >
         <BrowserRouter>
@@ -45,6 +75,7 @@ const App = () => {
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/register" element={<Register />} />
             <Route path="/blogform" element={<BlogForm />} />
+            <Route path="/blogs/blogpage" element={<BlogPage />} />
           </Routes>
         </BrowserRouter>
       </BlogContext.Provider>

@@ -41,17 +41,23 @@ const Login = () => {
     }
   };
   const loginSuccess = async (responseData, loggedInUsername) => {
-    setToken(responseData.token);
-    setPassword("");
+    localStorage.setItem("blogsiteToken", JSON.stringify(responseData.token));
+		setToken(responseData.token);
+    
+		setPassword("");
 		const loggedInUser = await UserServices.getUserByUsername(loggedInUsername);
 		console.log(loggedInUser);
+		
+		localStorage.setItem("blogUser", JSON.stringify(loggedInUser));
 		setCurrentUser(loggedInUser);
-    navigate("/blogs");
+    
+		navigate("/blogs");
   };
   const loginFail = (error) => {
     setNotification("Wrong username or password");
     setNotificationType("error");
-    console.error("Login failed:", error);
+    
+		console.error("Login failed:", error);
   };
 
 	const registrationLink = (

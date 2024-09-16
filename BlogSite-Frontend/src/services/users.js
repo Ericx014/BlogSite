@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://localhost:44352/users";
+const baseUrl = "https://localhost:7130/users";
 
 const addUser = async (username, email, password) => {
   const response = await axios.post(baseUrl, {

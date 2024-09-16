@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://localhost:44352/blogs";
+const baseUrl = "https://localhost:7130/blogs";
 
 const getUserBlogs = async (token) => {
   const response = await axios.get(`${baseUrl}/user`, {
@@ -28,4 +28,13 @@ const createBlog = async (newBlog, token) => {
 	return response.data;
 };
 
-export default {getUserBlogs, getAllBlogs, createBlog};
+const getBlogById = async (blogId, token) => {
+  const response = await axios.get(`${baseUrl}/${blogId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export default {getUserBlogs, getAllBlogs, getBlogById, createBlog};
