@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static BlogSite.Api.DTOs.BlogDTO;
+using static BlogSite.Api.DTOs.UserDTO;
 
 namespace BlogSite.Api.Endpoints
 {
@@ -34,25 +35,13 @@ namespace BlogSite.Api.Endpoints
             }
 
             var allBlogs = await db.Blogs
-                .Include(b => b.Comments)
-                .Include(b => b.BlogTags)
-                .ThenInclude(bt => bt.Tag)
-                .Select(b => new BlogDTO.BlogDto
+                .Include(b => b.User)
+                .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
-                    Blogger = b.User,
-                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
-                    {
-                        Id = c.Id,
-                        Content = c.Content,
-                        UserId = c.UserId,
-                        DateCreated = c.DateCreated
-                    }).ToList(),
-                    Likes = b.BlogLikes.Count,
-                    Dislikes = b.BlogDislikes.Count,
-                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList() 
+                    Blogger = b.User.Username
                 })
                 .ToListAsync();
 
@@ -63,20 +52,12 @@ namespace BlogSite.Api.Endpoints
             var currentUsername = user.FindFirstValue("Username");
 
             var allBlogs = await db.Blogs
-                .Include(b => b.Comments)
                 .Where(b => b.User.Username == currentUsername)
-                .Select(b => new BlogDTO.BlogDto
+                .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
-                    Content = b.Content,
-                    Blogger = b.User,
-                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
-                    {
-                        Id = c.Id,
-                        Content = c.Content,
-                        UserId = c.UserId
-                    }).ToList()
+                    Content = b.Content
                 })
                 .ToListAsync();
             return Results.Ok(allBlogs);
@@ -90,20 +71,14 @@ namespace BlogSite.Api.Endpoints
             }
 
             var categoryBlogs = await db.Blogs
-                .Include(b => b.Comments)
+                .Include(b => b.User)
                 .Where(b => b.Category == category)
-                .Select(b => new BlogDTO.BlogDto
+                .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
-                    Blogger = b.User,
-                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
-                    {
-                        Id = c.Id,
-                        Content = c.Content,
-                        UserId = c.UserId
-                    }).ToList()
+                    Blogger = b.User.Username
                 })
                 .ToListAsync();
 
@@ -135,23 +110,21 @@ namespace BlogSite.Api.Endpoints
 
             var blogs = await db.Blogs
                 .Where(b => blogIdWithTag.Contains(b.Id))
-                .Include(b => b.Comments)
-                .Include(b => b.BlogTags).ThenInclude(bt => bt.Tag)
-                .Select(b => new BlogDTO.BlogDto
+                .Include(b => b.User)
+                .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
-                    Blogger = b.User,
-                    Comments = b.Comments.Select(c => new BlogDTO.CommentSimpleDto
+                    Blogger = new UserDto
                     {
-                        Id = c.Id,
-                        Content = c.Content,
-                        UserId = c.UserId,
-                        DateCreated = c.DateCreated
-                    }).ToList(),
-                    Likes = b.BlogLikes.Count,
-                    Dislikes = b.BlogDislikes.Count,
+                        Id = b.User.Id,
+                        Username = b.User.Username,
+                        Email = b.User.Email,
+                        Blogs = new List<BlogSimpleDto>()
+                    },
+                    LikesCount = b.BlogLikes.Count,
+                    DislikesCount = b.BlogDislikes.Count,
                     Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList()
                 })
                 .ToListAsync();
@@ -166,8 +139,50 @@ namespace BlogSite.Api.Endpoints
 
         private static async Task<IResult> GetBlog(BlogDbContext db, int id)
         {
-            var blog = await db.Blogs.Include(b => b.User).FirstOrDefaultAsync(b => b.Id == id);
-            return blog is not null ? Results.Ok(blog) : Results.NotFound();
+            var blog = await db.Blogs
+                .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.User)
+                .Include(b => b.BlogTags)
+                    .ThenInclude(bt => bt.Tag)
+                .Include(b => b.BlogLikes)
+                .Include(b => b.BlogDislikes)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {id} not found.");
+            }
+
+            var blogDto = new BlogDto
+            {
+                Id = blog.Id,
+                Title = blog.Title,
+                Content = blog.Content,
+                Blogger = new UserDto
+                {
+                    Id = blog.User.Id,
+                    Username = blog.User.Username,
+                    Email = blog.User.Email,
+                    Blogs = new List<BlogSimpleDto>()
+                },
+                Comments = blog.Comments.Select(c => new CommentSimpleDto
+                {
+                    Id = c.Id,
+                    Content = c.Content,
+                    UserId = c.UserId,
+                    User = c.User.Username,
+                    DateCreated = c.DateCreated
+                }).ToList(),
+                LikesCount = blog.BlogLikes.Count,
+                DislikesCount = blog.BlogDislikes.Count,
+                Tags = blog.BlogTags.Select(bt => bt.Tag.TagName).ToList(),
+                Category = blog.Category,
+                DateCreated = blog.DateCreated,
+                DateUpdated = blog.DateUpdated
+            };
+
+            return Results.Ok(blogDto);
         }
 
         private static async Task<IResult> GetUserLikedBlogs(BlogDbContext db, int userId)
