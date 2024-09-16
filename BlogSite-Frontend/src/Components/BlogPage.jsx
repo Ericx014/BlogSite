@@ -43,24 +43,30 @@ const BlogPage = () => {
       <p>Category: {blog.category}</p>
       <div className="mt-3">
         <p>Tags:</p>
-        {blog.tags.map((tag) => (
-          <p key={tag.id}>{tag}</p>
-        ))}
+        {blog.tags.length > 0 ? (
+          blog.tags.map((tag, index) => <p key={index}>{tag}</p>)
+        ) : (
+          <p>No tags available</p>
+        )}
       </div>
-      <p>Likes: {blog.likesCount}</p>
-      <p>Created on: {blog.dateCreated}</p>
-      {blog.dateUpdated ? <p>Updated:{blog.dateUpdated}</p> : <p></p>}
-      {/* <p>Dislikes: {blog.dislikesCount}</p> */}
       <div className="mt-3">
         <p>Comments:</p>
-        {blog.comments.map((comment) => (
-          <div>
-            <p>{comment.user}</p>
-            <p>{comment.content}</p>
-            <p>{comment.dateCreated}</p>
-          </div>
-        ))}
+        {blog.comments.length > 0 ? (
+          blog.comments.map((comment) => (
+            <div key={comment.id}>
+              <p>{comment.user}</p>
+              <p>{comment.content}</p>
+              <p>{comment.dateCreated}</p>
+            </div>
+          ))
+        ) : (
+          <p>No comments available</p>
+        )}
       </div>
+      <p className="mt-3">Likes: {blog.likesCount}</p>
+      <p>Created on: {blog.dateCreated}</p>
+      {blog.dateUpdated ? <p>Updated:{blog.dateUpdated}</p> : <p></p>}
+
       <button
         className="border border-black py-1 px-3 mt-6"
         onClick={() => console.log(blog)}
