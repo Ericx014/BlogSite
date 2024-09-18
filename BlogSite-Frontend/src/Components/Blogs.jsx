@@ -102,6 +102,12 @@ const Blogs = () => {
     setNotificationType("success");
     localStorage.setItem("logInStatus", JSON.stringify(false));
     setIsLoggedIn(false);
+
+		localStorage.removeItem("logInStatus");
+		localStorage.removeItem("blogUser");
+		localStorage.removeItem("blogsiteToken");
+		localStorage.removeItem("currentBlogId");
+
     navigate("/");
   };
 
