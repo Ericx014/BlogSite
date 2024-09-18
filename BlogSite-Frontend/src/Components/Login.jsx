@@ -3,6 +3,7 @@ import {useContext, useEffect} from "react";
 import {BlogContext} from "../App";
 import AuthServices from "../services/login";
 import UserServices from "../services/users";
+import BlogServices from "../services/blogs";
 import LoginForm from "./LoginForm";
 import Notification from "./Notification";
 
@@ -17,7 +18,12 @@ const Login = () => {
     setNotification,
     notificationType,
     setNotificationType,
-		setCurrentUser
+    currentUser,
+    setCurrentUser,
+    token,
+    isLoggedIn,
+    setIsLoggedIn,
+    setUserLikedBlogs,
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
@@ -35,6 +41,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const responseData = await AuthServices.login(username, password);
+      console.log(responseData);
       loginSuccess(responseData, username);
     } catch (error) {
       loginFail(error);
@@ -42,25 +49,28 @@ const Login = () => {
   };
   const loginSuccess = async (responseData, loggedInUsername) => {
     localStorage.setItem("blogsiteToken", JSON.stringify(responseData.token));
-		setToken(responseData.token);
-    
-		setPassword("");
-		const loggedInUser = await UserServices.getUserByUsername(loggedInUsername);
-		console.log(loggedInUser);
-		
-		localStorage.setItem("blogUser", JSON.stringify(loggedInUser));
-		setCurrentUser(loggedInUser);
-    
-		navigate("/blogs");
+    setToken(responseData.token);
+
+    setPassword("");
+    const loggedInUser = await UserServices.getUserByUsername(loggedInUsername);
+    console.log(loggedInUser);
+
+    localStorage.setItem("blogUser", JSON.stringify(loggedInUser));
+    setCurrentUser(loggedInUser);
+
+    localStorage.setItem("logInStatus", JSON.stringify(true));
+    setIsLoggedIn(true);
+
+    navigate("/blogs");
   };
   const loginFail = (error) => {
     setNotification("Wrong username or password");
     setNotificationType("error");
-    
-		console.error("Login failed:", error);
+
+    console.error("Login failed:", error);
   };
 
-	const registrationLink = (
+  const registrationLink = (
     <>
       <p>
         Dont have an account?{" "}

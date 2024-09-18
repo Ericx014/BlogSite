@@ -17,6 +17,7 @@ const Blogs = () => {
     currentUser,
     currentBlogId,
     setCurrentBlogId,
+    setIsLoggedIn,
   } = useContext(BlogContext);
   const navigate = useNavigate();
   const [blogsToShow, setBlogToShow] = useState("random");
@@ -71,7 +72,11 @@ const Blogs = () => {
   };
 
   const blogsToDisplay = displayBlogs.map((blog) => (
-    <section className="mb-5 cursor-pointer" onClick={() => handleBlogSelect(blog.id)}>
+    <section
+      key={blog.id}
+      className="mb-5 cursor-pointer"
+      onClick={() => handleBlogSelect(blog.id)}
+    >
       {/* <p>ID: {blog.id}</p> */}
       <p>Title: {blog.title}</p>
       <p>Content: {blog.content}</p>
@@ -95,6 +100,8 @@ const Blogs = () => {
     setUsername("");
     setNotification("Logged out successfully");
     setNotificationType("success");
+    localStorage.setItem("logInStatus", JSON.stringify(false));
+    setIsLoggedIn(false);
     navigate("/");
   };
 

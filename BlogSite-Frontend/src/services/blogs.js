@@ -25,7 +25,7 @@ const createBlog = async (newBlog, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-	return response.data;
+  return response.data;
 };
 
 const getBlogById = async (blogId, token) => {
@@ -37,4 +37,19 @@ const getBlogById = async (blogId, token) => {
   return response.data;
 };
 
-export default {getUserBlogs, getAllBlogs, getBlogById, createBlog};
+const getUserLikedBlogs = async (userId, token) => {
+  const response = await axios.get(`${baseUrl}/${userId}/userliked`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export default {
+  getUserBlogs,
+  getAllBlogs,
+  getBlogById,
+  createBlog,
+  getUserLikedBlogs,
+};
