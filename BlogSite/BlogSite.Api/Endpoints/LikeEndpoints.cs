@@ -10,8 +10,8 @@ namespace BlogSite.Api.Endpoints
         {
             app.MapPost("/blogs/{blogId}/addlike/{userId}", AddLike).RequireAuthorization();
             app.MapPost("/blogs/{blogId}/adddislike/{userId}", AddDislike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/removelike{userId}", RemoveLike).RequireAuthorization();
-            app.MapPatch("/blogs/{id}/removedislike{userId}", RemoveDislike).RequireAuthorization();
+            app.MapPatch("/blogs/{blogId}/removelike/{userId}", RemoveLike).RequireAuthorization();
+            app.MapPatch("/blogs/{blogId}/removedislike/{userId}", RemoveDislike).RequireAuthorization();
         }
 
         private static async Task<IResult> AddLike(BlogDbContext db, int blogId, int userId)

@@ -198,6 +198,7 @@ namespace BlogSite.Api.Endpoints
 
             var likedBlogs = user.BlogLikes.Select(bl => new 
             {
+                Id = bl.Blog.Id,
                 Title = bl.Blog.Title,
                 Content = bl.Blog.Content
             }).ToList();
