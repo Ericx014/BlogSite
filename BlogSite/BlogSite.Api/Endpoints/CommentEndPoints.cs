@@ -10,7 +10,7 @@ namespace BlogSite.Api.Endpoints
         {
             app.MapGet("/comments", GetComments);
             app.MapPost("/comments/{blogId}/{userId}", CreateComment);
-            app.MapDelete("/comments/{id}", DeleteComments);
+            app.MapDelete("/comments/{commentId}/{userId}", DeleteComment);
         }
 
         public static async Task<IResult> GetComments(BlogDbContext db)
@@ -47,16 +47,31 @@ namespace BlogSite.Api.Endpoints
             return Results.Created($"/comments/{comment.Id}", createdComment);
         }
 
-        public static async Task<IResult> DeleteComments(BlogDbContext db, int id)
+        public static async Task<IResult> DeleteComment(BlogDbContext db, int commentId, int userId)
         {
-            var commentToDelete = await db.Comments.FindAsync(id);
-            if (commentToDelete is not null)
+            var commentToDelete = await db.Comments
+                .Include(c => c.User)
+                .Include(c => c.Blog)
+                    .ThenInclude(b => b.User)
+                .FirstOrDefaultAsync(c => c.Id == commentId);
+
+            var user = await db.Users.FindAsync(userId);
+            if (user == null)
             {
-                db.Comments.Remove(commentToDelete);
-                await db.SaveChangesAsync();
-                return Results.NoContent();
+                return Results.NotFound($"User with ID {userId} not found.");
             }
-            return Results.NotFound();
+            if (commentToDelete == null)
+            {
+                return Results.NotFound("Comment not found");
+            }
+            if (commentToDelete.User.Id != userId && commentToDelete.Blog.User.Id != userId)
+            {
+                return Results.NotFound("Only commentor or blog owner can deleted comment");
+            }
+
+            db.Comments.Remove(commentToDelete);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
         }
     }
 }
