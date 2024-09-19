@@ -46,10 +46,20 @@ const getUserLikedBlogs = async (userId, token) => {
   return response.data;
 };
 
+const deleteBlog = async (userId, blogId, token) => {
+  const response = await axios.delete(`${baseUrl}/${userId}/${blogId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export default {
   getUserBlogs,
   getAllBlogs,
   getBlogById,
   createBlog,
   getUserLikedBlogs,
+  deleteBlog,
 };

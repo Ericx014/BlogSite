@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {BlogContext} from "../App";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
@@ -16,6 +17,7 @@ const BlogPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogById = async () => {
@@ -30,7 +32,7 @@ const BlogPage = () => {
         setBlog(fetchedBlog);
         setError(null);
         setIsLiked(userLikedBlogs.includes(fetchedBlog.id));
-				console.log(userLikedBlogs)
+        console.log(userLikedBlogs);
       } catch (err) {
         console.error("Failed to fetch blog:", err);
         setError("Failed to load blog. Please try again later.");
@@ -91,6 +93,19 @@ const BlogPage = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const responseData = await BlogServices.deleteBlog(
+        blog.id,
+        currentUser.id,
+        token
+      );
+      navigate("/blogs");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!blog) return <p>No blog found</p>;
@@ -132,6 +147,21 @@ const BlogPage = () => {
       </button>
       <p>Created on: {blog.dateCreated}</p>
       {blog.dateUpdated && <p>Updated: {blog.dateUpdated}</p>}
+
+      <button
+        className="px-1 py-2 border border-black"
+        onClick={() => console.log(blog)}
+      >
+        Blog Detail
+      </button>
+      {blog.blogger.id === currentUser.id && (
+        <button
+          className="border border-black px-1 py-2"
+          onClick={handleDelete}
+        >
+          Delete Blog
+        </button>
+      )}
     </div>
   );
 };
