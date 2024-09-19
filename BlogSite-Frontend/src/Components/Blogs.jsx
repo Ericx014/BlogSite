@@ -100,7 +100,6 @@ const Blogs = () => {
     setUsername("");
     setNotification("Logged out successfully");
     setNotificationType("success");
-    localStorage.setItem("logInStatus", JSON.stringify(false));
     setIsLoggedIn(false);
 
 		localStorage.removeItem("logInStatus");

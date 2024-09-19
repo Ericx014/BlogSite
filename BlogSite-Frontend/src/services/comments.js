@@ -15,8 +15,8 @@ const addComment = async (newComment, blogId, userId, token) => {
 };
 
 // Add only commentors and blogger can delete the comment
-const deleteComment = async (commentId, token) => {
-  const response = await axios.delete(`${baseUrl}/comments/${commentId}`, {
+const deleteComment = async (commentId, userId, token) => {
+  const response = await axios.delete(`${baseUrl}/comments/${commentId}/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

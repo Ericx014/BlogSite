@@ -122,7 +122,7 @@ const BlogPage = () => {
           },
         ],
       }));
-			setCommentInput("");
+      setCommentInput("");
       console.log(responseData);
     } catch (e) {
       console.error(e);
@@ -131,7 +131,7 @@ const BlogPage = () => {
 
   const handleCommentDelete = async (commentId) => {
     try {
-      await CommentServices.deleteComment(commentId, token);
+      await CommentServices.deleteComment(commentId, currentUser.id, token);
       setBlog((prevBlog) => ({
         ...prevBlog,
         comments: prevBlog.comments.filter(
@@ -187,16 +187,19 @@ const BlogPage = () => {
         <p>Comments:</p>
         {blog.comments.length > 0 ? (
           blog.comments.map((comment) => (
-            <div key={comment.id}>
+            <div key={comment.id} className="mb-2 bg-gray-300 w-fit">
               <p>{comment.user}</p>
               <p>{comment.content}</p>
               <p>{comment.dateCreated}</p>
-              <button
-                className="border border-black"
-                onClick={() => handleCommentDelete(comment.id)}
-              >
-                Delete comment
-              </button>
+              {(comment.user == currentUser.username ||
+                blog.blogger.username == currentUser.username) && (
+                <button
+                  className="border border-black"
+                  onClick={() => handleCommentDelete(comment.id)}
+                >
+                  Delete comment
+                </button>
+              )}
             </div>
           ))
         ) : (

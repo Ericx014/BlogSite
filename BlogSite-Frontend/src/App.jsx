@@ -34,7 +34,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (storedToken) {
+      if (storedToken && isLoggedIn) {
         try {
           const allBlogsData = await BlogServices.getAllBlogs(storedToken);
           setAllBlogs(allBlogsData);
