@@ -9,7 +9,7 @@ namespace BlogSite.Api.Endpoints
         public static void MapCommentEndPoints(this WebApplication app)
         {
             app.MapGet("/comments", GetComments);
-            app.MapPost("/comments", CreateComment);
+            app.MapPost("/comments/{blogId}/{userId}", CreateComment);
             app.MapDelete("/comments/{id}", DeleteComments);
         }
 
