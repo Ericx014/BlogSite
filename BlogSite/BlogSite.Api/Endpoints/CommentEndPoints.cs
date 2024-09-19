@@ -35,7 +35,16 @@ namespace BlogSite.Api.Endpoints
             db.Comments.Add(comment);
             blog.Comments.Add(comment);
             await db.SaveChangesAsync();
-            return Results.Created($"/comments/{comment.Id}", comment);
+
+            var createdComment = new
+            {
+                Id = comment.Id,
+                Author = user.Username,
+                Content = comment.Content,
+                DateCreated = comment.DateCreated
+            };
+
+            return Results.Created($"/comments/{comment.Id}", createdComment);
         }
 
         public static async Task<IResult> DeleteComments(BlogDbContext db, int id)
