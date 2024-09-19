@@ -5,6 +5,7 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import BlogForm from "./Components/BlogForm";
 import BlogPage from "./Components/BlogPage";
+import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
 
 export const BlogContext = createContext();
@@ -86,6 +87,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/blogform" element={<BlogForm />} />
             <Route path="/blogs/blogpage" element={<BlogPage />} />
+            <Route path="/blogs/blogger" element={<BloggerPage />} />
           </Routes>
         </BrowserRouter>
       </BlogContext.Provider>

@@ -2,9 +2,10 @@ import {useState, useContext} from "react";
 import {BlogContext} from "../App";
 import {useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
+import blogs from "../services/blogs";
 
 const BlogForm = () => {
-  const {token, currentUser} = useContext(BlogContext);
+  const {token, currentUser, setCurrentUser} = useContext(BlogContext);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -16,13 +17,13 @@ const BlogForm = () => {
     e.preventDefault();
 
     const newBlog = {
-      blog: { title, content, category },
+      blog: {title, content, category},
       tags: tags.split(",").map((tag) => tag.trim()),
       userId: currentUser.id,
     };
 
-    const response = await BlogServices.createBlog(newBlog, token);
-    console.log("Blog created:", response);
+    const responseData = await BlogServices.createBlog(newBlog, token);
+    console.log("Blog created:", responseData);
     setTitle("");
     setContent("");
     setCategory("");

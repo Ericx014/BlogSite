@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import {BlogContext} from "../App";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
@@ -161,7 +161,9 @@ const BlogPage = () => {
     <div>
       <h1>{blog.title}</h1>
       <p>{blog.content}</p>
-      <p>Written by: {blog.blogger.username}</p>
+      <p>
+        Written by: <Link to="/blogs/blogger">{blog.blogger.username}</Link>
+      </p>
       <p>Category: {blog.category}</p>
       <div className="mt-6">
         <p>Tags:</p>
