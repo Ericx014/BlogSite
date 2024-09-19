@@ -109,20 +109,36 @@ const BlogPage = () => {
         currentUser.id,
         token
       );
-			console.log(newComment)
+      console.log(newComment);
       setBlog((prevBlog) => ({
         ...prevBlog,
         comments: [
           ...prevBlog.comments,
           {
-						id: responseData.id,
+            id: responseData.id,
             user: responseData.author,
             content: responseData.content,
             dateCreated: responseData.dateCreated,
           },
         ],
       }));
+			setCommentInput("");
       console.log(responseData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    try {
+      await CommentServices.deleteComment(commentId, token);
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        comments: prevBlog.comments.filter(
+          (comment) => comment.id !== commentId
+        ),
+      }));
+      console.log("Deleted successfully", commentId);
     } catch (e) {
       console.error(e);
     }
@@ -175,6 +191,12 @@ const BlogPage = () => {
               <p>{comment.user}</p>
               <p>{comment.content}</p>
               <p>{comment.dateCreated}</p>
+              <button
+                className="border border-black"
+                onClick={() => handleCommentDelete(comment.id)}
+              >
+                Delete comment
+              </button>
             </div>
           ))
         ) : (

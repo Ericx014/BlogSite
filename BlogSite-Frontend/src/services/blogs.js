@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://localhost:7130/blogs";
+const baseUrl = "http://localhost:5007/blogs";
 
 const getUserBlogs = async (token) => {
   const response = await axios.get(`${baseUrl}/user`, {

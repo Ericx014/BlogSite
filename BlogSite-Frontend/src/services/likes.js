@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://localhost:7130";
+const baseUrl = "http://localhost:5007";
 
 const addLike = async (blogId, userId, token) => {
   const response = await axios.post(`${baseUrl}/blogs/${blogId}/addlike/${userId}`, {}, {
