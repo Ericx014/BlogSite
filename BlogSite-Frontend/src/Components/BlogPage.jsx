@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {BlogContext} from "../App";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
+import CommentServices from "../services/comments";
 
 const BlogPage = () => {
   const {
@@ -17,6 +18,7 @@ const BlogPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [commentInput, setCommentInput] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,13 +95,42 @@ const BlogPage = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+
+    const newComment = {
+      content: commentInput,
+    };
+
     try {
-      const responseData = await BlogServices.deleteBlog(
+      const responseData = await CommentServices.addComment(
+        newComment,
         blog.id,
         currentUser.id,
         token
       );
+			console.log(newComment)
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        comments: [
+          ...prevBlog.comments,
+          {
+						id: responseData.id,
+            user: responseData.author,
+            content: responseData.content,
+            dateCreated: responseData.dateCreated,
+          },
+        ],
+      }));
+      console.log(responseData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await BlogServices.deleteBlog(blog.id, currentUser.id, token);
       navigate("/blogs");
     } catch (e) {
       console.error(e);
@@ -125,6 +156,18 @@ const BlogPage = () => {
         )}
       </div>
       <div className="mt-6">
+        <form onSubmit={handleAddComment}>
+          <label>Comment</label>
+          <input
+            className="border border-black"
+            type="text"
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+          />
+          <button type="submit" className="border border-black px-1 py-2">
+            Add comment
+          </button>
+        </form>
         <p>Comments:</p>
         {blog.comments.length > 0 ? (
           blog.comments.map((comment) => (
@@ -147,7 +190,6 @@ const BlogPage = () => {
       </button>
       <p>Created on: {blog.dateCreated}</p>
       {blog.dateUpdated && <p>Updated: {blog.dateUpdated}</p>}
-
       <button
         className="px-1 py-2 border border-black"
         onClick={() => console.log(blog)}
