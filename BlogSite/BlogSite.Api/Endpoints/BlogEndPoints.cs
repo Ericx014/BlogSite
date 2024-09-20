@@ -291,7 +291,7 @@ namespace BlogSite.Api.Endpoints
             return Results.NoContent();
         }
 
-        private static async Task<IResult> UpdateBlogContent(BlogDbContext db, int blogId, int userId, [FromBody] Blog updatedBlog)
+        private static async Task<IResult> UpdateBlogContent(BlogDbContext db, int blogId, int userId, [FromBody] Blog requestBlog)
         {
             var user = await db.Users.FindAsync(userId);
             if (user == null)
@@ -299,7 +299,11 @@ namespace BlogSite.Api.Endpoints
                 return Results.NotFound($"User with ID {userId} not found.");
             }
 
-            var blog = await db.Blogs.FindAsync(blogId);
+            var blog = await db.Blogs
+                .Include(b => b.BlogTags)
+                .ThenInclude(bt => bt.Tag)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+
             if (blog == null)
             {
                 return Results.NotFound($"Blog with ID {blogId} not found.");
@@ -310,10 +314,34 @@ namespace BlogSite.Api.Endpoints
                 return Results.BadRequest("Blogs can only be editted by authors");
             }
 
-            blog.Content = updatedBlog.Content;
+            blog.Content = requestBlog.Content;
+            blog.Category = requestBlog.Category;
             blog.DateUpdated = DateTime.UtcNow;
-            await db.SaveChangesAsync();
 
+            //var newTagNames = request.Blog.BlogTags.Select(bt => bt.Tag.TagName.ToLower()).ToList();
+            //var existingTagNames = blog.BlogTags.Select(bt => bt.Tag.TagName.ToLower()).ToList();
+
+            //var tagsToRemove = blog.BlogTags.Where(bt => !newTagNames.Contains(bt.Tag.TagName.ToLower())).ToList();
+            //foreach (var tagToRemove in tagsToRemove)
+            //{
+            //    blog.BlogTags.Remove(tagToRemove);
+            //}
+
+            //foreach (var newTagName in newTagNames)
+            //{
+            //    if (!existingTagNames.Contains(newTagName))
+            //    {
+            //        var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName.ToLower() == newTagName);
+            //        if (tag == null)
+            //        {
+            //            tag = new Tag { TagName = newTagName };
+            //            db.Tags.Add(tag);
+            //        }
+            //        blog.BlogTags.Add(new BlogTag { Blog = blog, Tag = tag });
+            //    }
+            //}
+
+            await db.SaveChangesAsync();
             return Results.NoContent();
         }
     }
