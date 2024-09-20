@@ -25,7 +25,6 @@ const BlogPage = () => {
   const [isEditBlog, setIsEditBlog] = useState(false);
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-  // const [tags, setTags] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,7 +39,6 @@ const BlogPage = () => {
         setBlog(fetchedBlog);
         setContent(fetchedBlog.content);
         setCategory(fetchedBlog.category);
-        // setTags(fetchedBlog.tags.join(", "));
         setError(null);
         setIsLiked(userLikedBlogs.includes(fetchedBlog.id));
         console.log(userLikedBlogs);
@@ -164,8 +162,7 @@ const BlogPage = () => {
       const updatedBlog = {
         ...blog,
         content,
-        category,
-        // tags: tags.split(",").map((tag) => tag.trim()),
+        category
       };
       await BlogServices.updateBlog(updatedBlog, currentUser.id, blog.id, token);
       setBlog(updatedBlog);
@@ -208,8 +205,6 @@ const BlogPage = () => {
           setContent={setContent}
           category={category}
           setCategory={setCategory}
-          // tags={tags}
-          // setTags={setTags}
         />
       )}
     </div>

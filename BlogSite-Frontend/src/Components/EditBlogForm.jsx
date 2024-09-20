@@ -5,8 +5,6 @@ const EditBlogForm = ({
   setContent,
   category,
   setCategory,
-  // tags,
-  // setTags,
 }) => {
   return (
     <form onSubmit={handleEditBlog}>
@@ -31,15 +29,6 @@ const EditBlogForm = ({
           onChange={(e) => setCategory(e.target.value)}
         />
       </div>
-      {/* <div>
-        <label>Tags</label>
-        <input
-          className="border border-black rounded-md"
-          type="text"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-        />
-      </div> */}
       <button
         className="border border-black rounded-lg px-3 py-1"
         type="submit"
