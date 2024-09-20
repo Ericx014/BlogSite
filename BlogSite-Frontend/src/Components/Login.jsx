@@ -17,12 +17,9 @@ const Login = () => {
     setNotification,
     notificationType,
     setNotificationType,
-    currentUser,
     setCurrentUser,
-    token,
     isLoggedIn,
     setIsLoggedIn,
-    setUserLikedBlogs,
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
@@ -35,6 +32,16 @@ const Login = () => {
       return () => clearTimeout(timeout);
     }
   }, [notification, notificationType, setNotification, setNotificationType]);
+
+  useEffect(() => {
+    const logOutTimer = setTimeout(() => {
+      localStorage.removeItem("logInStatus");
+      setIsLoggedIn(false);
+      navigate("/");
+    }, 360000);
+
+		return () => clearTimeout(logOutTimer);
+  }, [isLoggedIn, setIsLoggedIn, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
