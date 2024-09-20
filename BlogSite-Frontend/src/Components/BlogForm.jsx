@@ -2,10 +2,9 @@ import {useState, useContext} from "react";
 import {BlogContext} from "../App";
 import {useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
-import blogs from "../services/blogs";
 
 const BlogForm = () => {
-  const {token, currentUser, setCurrentUser} = useContext(BlogContext);
+  const {token, currentUser} = useContext(BlogContext);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

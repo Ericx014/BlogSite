@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import {useNavigate, Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {BlogContext} from "../App";
 import BlogInfo from "./BlogInfo";
 import BlogComments from "./BlogComments";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
+import EditBlogForm from "./EditBlogForm";
 
 const BlogPage = () => {
   const {
@@ -21,12 +22,15 @@ const BlogPage = () => {
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
+  const [isEditBlog, setIsEditBlog] = useState(false);
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  // const [tags, setTags] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogById = async () => {
       if (!currentBlogId || !token) return;
-
       setIsLoading(true);
       try {
         const fetchedBlog = await BlogServices.getBlogById(
@@ -34,6 +38,9 @@ const BlogPage = () => {
           token
         );
         setBlog(fetchedBlog);
+        setContent(fetchedBlog.content);
+        setCategory(fetchedBlog.category);
+        // setTags(fetchedBlog.tags.join(", "));
         setError(null);
         setIsLiked(userLikedBlogs.includes(fetchedBlog.id));
         console.log(userLikedBlogs);
@@ -69,7 +76,6 @@ const BlogPage = () => {
     };
     fetchUserLikedBlogs();
   }, [currentUser, token, isLoggedIn]);
-
   const handleLike = async (blogId, userId) => {
     try {
       if (isLiked) {
@@ -94,7 +100,6 @@ const BlogPage = () => {
       console.error("Error handling like:", error);
     }
   };
-
   const handleAddComment = async (e) => {
     e.preventDefault();
 
@@ -128,7 +133,6 @@ const BlogPage = () => {
       console.error(e);
     }
   };
-
   const handleCommentDelete = async (commentId) => {
     try {
       await CommentServices.deleteComment(commentId, currentUser.id, token);
@@ -143,11 +147,29 @@ const BlogPage = () => {
       console.error(e);
     }
   };
-
   const handleDelete = async () => {
     try {
       await BlogServices.deleteBlog(blog.id, currentUser.id, token);
       navigate("/blogs");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const startEdit = () => {
+    setIsEditBlog(true);
+  };
+  const handleEditBlog = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedBlog = {
+        ...blog,
+        content,
+        category,
+        // tags: tags.split(",").map((tag) => tag.trim()),
+      };
+      await BlogServices.updateBlog(updatedBlog, currentUser.id, blog.id, token);
+      setBlog(updatedBlog);
+      setIsEditBlog(false);
     } catch (e) {
       console.error(e);
     }
@@ -159,21 +181,37 @@ const BlogPage = () => {
 
   return (
     <div>
-      <BlogInfo
-        blog={blog}
-        handleDelete={handleDelete}
-        currentUser={currentUser}
-        isLiked={isLiked}
-        handleLike={handleLike}
-      />
-      <BlogComments
-        blog={blog}
-        handleAddComment={handleAddComment}
-        commentInput={commentInput}
-        setCommentInput={setCommentInput}
-        handleCommentDelete={handleCommentDelete}
-        currentUser={currentUser}
-      />
+      {!isEditBlog ? (
+        <>
+          <BlogInfo
+            blog={blog}
+            handleDelete={handleDelete}
+            currentUser={currentUser}
+            isLiked={isLiked}
+            handleLike={handleLike}
+            handleEditBlog={startEdit}
+          />
+          <BlogComments
+            blog={blog}
+            handleAddComment={handleAddComment}
+            commentInput={commentInput}
+            setCommentInput={setCommentInput}
+            handleCommentDelete={handleCommentDelete}
+            currentUser={currentUser}
+          />
+        </>
+      ) : (
+        <EditBlogForm
+          blog={blog}
+          handleEditBlog={handleEditBlog}
+          content={content}
+          setContent={setContent}
+          category={category}
+          setCategory={setCategory}
+          // tags={tags}
+          // setTags={setTags}
+        />
+      )}
     </div>
   );
 };

@@ -55,6 +55,19 @@ const deleteBlog = async (userId, blogId, token) => {
   return response.data;
 };
 
+const updateBlog = async (updatedBlog, userId, blogId, token) => {
+  const response = await axios.patch(
+    `${baseUrl}/${blogId}/${userId}`,
+    updatedBlog,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
 export default {
   getUserBlogs,
   getAllBlogs,
@@ -62,4 +75,5 @@ export default {
   createBlog,
   getUserLikedBlogs,
   deleteBlog,
+  updateBlog,
 };
