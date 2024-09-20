@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import {BlogContext} from "../App";
+import BlogInfo from "./BlogInfo";
+import BlogComments from "./BlogComments";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
@@ -71,7 +73,6 @@ const BlogPage = () => {
   const handleLike = async (blogId, userId) => {
     try {
       if (isLiked) {
-        // Remove like
         await LikeServices.removeLike(blogId, userId, token);
         setBlog((prevBlog) => ({
           ...prevBlog,
@@ -81,7 +82,6 @@ const BlogPage = () => {
           prevLikedBlogs.filter((id) => id !== blogId)
         );
       } else {
-        // Add like
         await LikeServices.addLike(blogId, userId, token);
         setBlog((prevBlog) => ({
           ...prevBlog,
@@ -159,78 +159,21 @@ const BlogPage = () => {
 
   return (
     <div>
-      <h1>{blog.title}</h1>
-      <p>{blog.content}</p>
-      <p>
-        Written by: <Link to="/blogs/blogger">{blog.blogger.username}</Link>
-      </p>
-      <p>Category: {blog.category}</p>
-      <div className="mt-6">
-        <p>Tags:</p>
-        {blog.tags.length > 0 ? (
-          blog.tags.map((tag, index) => <p key={index}>{tag}</p>)
-        ) : (
-          <p>No tags available</p>
-        )}
-      </div>
-      <div className="mt-6">
-        <form onSubmit={handleAddComment}>
-          <label>Comment</label>
-          <input
-            className="border border-black"
-            type="text"
-            value={commentInput}
-            onChange={(e) => setCommentInput(e.target.value)}
-          />
-          <button type="submit" className="border border-black px-1 py-2">
-            Add comment
-          </button>
-        </form>
-        <p>Comments:</p>
-        {blog.comments.length > 0 ? (
-          blog.comments.map((comment) => (
-            <div key={comment.id} className="mb-2 bg-gray-300 w-fit">
-              <p>{comment.user}</p>
-              <p>{comment.content}</p>
-              <p>{comment.dateCreated}</p>
-              {(comment.user == currentUser.username ||
-                blog.blogger.username == currentUser.username) && (
-                <button
-                  className="border border-black"
-                  onClick={() => handleCommentDelete(comment.id)}
-                >
-                  Delete comment
-                </button>
-              )}
-            </div>
-          ))
-        ) : (
-          <p>No comments available</p>
-        )}
-      </div>
-      <p className="mt-6">Likes: {blog.likesCount}</p>
-      <button
-        onClick={() => handleLike(blog.id, currentUser.id)}
-        className="border border-black px-2 py-1"
-      >
-        {isLiked ? "Unlike" : "Like"}
-      </button>
-      <p>Created on: {blog.dateCreated}</p>
-      {blog.dateUpdated && <p>Updated: {blog.dateUpdated}</p>}
-      <button
-        className="px-1 py-2 border border-black"
-        onClick={() => console.log(blog)}
-      >
-        Blog Detail
-      </button>
-      {blog.blogger.id === currentUser.id && (
-        <button
-          className="border border-black px-1 py-2"
-          onClick={handleDelete}
-        >
-          Delete Blog
-        </button>
-      )}
+      <BlogInfo
+        blog={blog}
+        handleDelete={handleDelete}
+        currentUser={currentUser}
+        isLiked={isLiked}
+        handleLike={handleLike}
+      />
+      <BlogComments
+        blog={blog}
+        handleAddComment={handleAddComment}
+        commentInput={commentInput}
+        setCommentInput={setCommentInput}
+        handleCommentDelete={handleCommentDelete}
+        currentUser={currentUser}
+      />
     </div>
   );
 };

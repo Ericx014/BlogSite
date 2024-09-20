@@ -14,7 +14,7 @@ const BloggerPage = () => {
   return (
     <section>
       <h1>Blogger Profile</h1>
-      <h4 className="mb-3">{currentUser.username}</h4>
+      <h4 className="">{currentUser.username}</h4>
       <h4 className="mb-3">{currentUser.email}</h4>
       <section>
         {userBlogs.map((blog) => (
@@ -24,7 +24,6 @@ const BloggerPage = () => {
           </div>
         ))}
       </section>
-      <button onClick={() => console.log(currentUser)}>Click</button>
     </section>
   );
 };
