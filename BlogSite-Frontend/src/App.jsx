@@ -33,15 +33,15 @@ const App = () => {
     JSON.parse(localStorage.getItem("currentBlogId")) || null;
   const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
 
-  useEffect(() => {
-    const clearLocalStorage = () => {
-      localStorage.clear();
-    };
-    window.addEventListener("beforeunload", clearLocalStorage);
-    return () => {
-      window.removeEventListener("beforeunload", clearLocalStorage);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const clearLocalStorage = () => {
+  //     localStorage.clear();
+  //   };
+  //   window.addEventListener("beforeunload", clearLocalStorage);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", clearLocalStorage);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {

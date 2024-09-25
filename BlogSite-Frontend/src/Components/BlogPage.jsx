@@ -7,6 +7,7 @@ import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
 import EditBlogForm from "./EditBlogForm";
+import BlogTags from "./BlogTags";
 
 const BlogPage = () => {
   const {
@@ -162,9 +163,14 @@ const BlogPage = () => {
       const updatedBlog = {
         ...blog,
         content,
-        category
+        category,
       };
-      await BlogServices.updateBlog(updatedBlog, currentUser.id, blog.id, token);
+      await BlogServices.updateBlog(
+        updatedBlog,
+        currentUser.id,
+        blog.id,
+        token
+      );
       setBlog(updatedBlog);
       setIsEditBlog(false);
     } catch (e) {
@@ -188,6 +194,7 @@ const BlogPage = () => {
             handleLike={handleLike}
             handleEditBlog={startEdit}
           />
+					<BlogTags blog={blog} setBlog={setBlog} />
           <BlogComments
             blog={blog}
             handleAddComment={handleAddComment}
@@ -207,6 +214,12 @@ const BlogPage = () => {
           setCategory={setCategory}
         />
       )}
+      <button
+        onClick={() => console.log(blog)}
+        className="border border-black px-2 py-1"
+      >
+        Blog deets
+      </button>
     </div>
   );
 };

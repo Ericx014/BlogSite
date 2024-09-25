@@ -11,13 +11,22 @@ namespace BlogSite.Api.Endpoints
     {
         public static void MapTagEndpoints(this WebApplication app) {
             app.MapGet("/tags", GetAllTags);
-            app.MapPost("/blogs/{blogId}/tags", AddTagToBlog).RequireAuthorization();
+            app.MapGet("/tags/{blogId}", GetTags);
+            app.MapPost("/blogs/{blogId}/tags/{userId}", AddTagToBlog).RequireAuthorization();
             app.MapDelete("/blogs/{blogId}/tags/{tagName}", RemoveTagFromBlog).RequireAuthorization();
         }
 
         public static async Task<IResult> GetAllTags (BlogDbContext db)
         {
             var tags = await db.Tags.ToListAsync();
+            return Results.Ok(tags);
+        }
+
+        public static async Task<IResult> GetTags(BlogDbContext db, int blogId)
+        {
+            var blog = await FindBlogWithTag(db, blogId);
+            var tags = blog.BlogTags.Select(bt => bt.Tag.TagName).ToList();
+
             return Results.Ok(tags);
         }
 
@@ -29,7 +38,7 @@ namespace BlogSite.Api.Endpoints
                 return Results.NotFound($"User with ID {userId} not found.");
             }
 
-            var blog = await FindBlog(db, blogId);
+            var blog = await FindBlogWithTag(db, blogId);
             if (blog == null)
             {
                 return Results.NotFound($"Blog with ID {blogId} not found.");
@@ -71,7 +80,7 @@ namespace BlogSite.Api.Endpoints
                 return Results.NotFound($"User with ID {userId} not found.");
             }
 
-            var blog = await FindBlog(db, blogId);
+            var blog = await FindBlogWithTag(db, blogId);
             if (blog == null)
             {
                 return Results.NotFound($"Blog with ID {blogId} not found.");
@@ -100,7 +109,7 @@ namespace BlogSite.Api.Endpoints
             return user;
         }
 
-        public static async Task<Blog> FindBlog(BlogDbContext db, int blogId)
+        public static async Task<Blog> FindBlogWithTag(BlogDbContext db, int blogId)
         {
             var blog = await db.Blogs
                 .Include(b => b.BlogTags).ThenInclude(bt => bt.Tag)

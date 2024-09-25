@@ -16,7 +16,7 @@ const BlogComments = ({
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
         />
-        <button type="submit" className="border border-black px-1 py-2">
+        <button type="submit" className="border border-black px-1">
           Add comment
         </button>
       </form>

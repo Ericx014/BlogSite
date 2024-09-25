@@ -36,12 +36,16 @@ namespace BlogSite.Api.Endpoints
 
             var allBlogs = await db.Blogs
                 .Include(b => b.User)
+                .Include(b => b.BlogTags)
+                    .ThenInclude(bt => bt.Tag)
                 .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Content = b.Content,
-                    Blogger = b.User.Username
+                    Blogger = b.User.Username,
+                    Category = b.Category,
+                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList()
                 })
                 .ToListAsync();
 
