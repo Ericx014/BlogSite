@@ -17,7 +17,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("");
-	const [userLikedBlogs, setUserLikedBlogs] = useState([])
+  const [userLikedBlogs, setUserLikedBlogs] = useState([]);
 
   const storedLogInStatus =
     JSON.parse(localStorage.getItem("logInStatus")) || false;
@@ -32,6 +32,16 @@ const App = () => {
   const storedCurrentBlogId =
     JSON.parse(localStorage.getItem("currentBlogId")) || null;
   const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
+
+  useEffect(() => {
+    const clearLocalStorage = () => {
+      localStorage.clear();
+    };
+    window.addEventListener("beforeunload", clearLocalStorage);
+    return () => {
+      window.removeEventListener("beforeunload", clearLocalStorage);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
