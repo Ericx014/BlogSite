@@ -4,7 +4,7 @@ import {BlogContext} from "../App";
 
 const BlogTags = ({blog, setBlog}) => {
   const {token, currentUser} = useContext(BlogContext);
-  const [newTagContent, setNewTagContent] = useState([]);
+  const [newTagContent, setNewTagContent] = useState("");
   const [isAddTag, setIsAddTag] = useState(false);
 
   const handleAddTag = async (e) => {
@@ -31,36 +31,63 @@ const BlogTags = ({blog, setBlog}) => {
       console.error("Failed to add tag:", e);
     }
   };
+
+  const handleRemoveTag = async (tagName) => {
+    try {
+      await TagServices.removeTag(token, blog.id, currentUser.id, tagName);
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        tags: prevBlog.tags.filter((tag) => tag !== tagName),
+      }));
+    } catch (e) {
+      console.error("Failed to remove tag:", e);
+    }
+  };
+
   return (
     <>
       <div className="mt-6">
         {isAddTag && (
           <form onSubmit={handleAddTag}>
             <input
-              className="border border-black"
+              className="border border-black px-2 py-1"
               type="text"
               value={newTagContent}
               placeholder="Enter new tag"
               onChange={(e) => setNewTagContent(e.target.value)}
             />
             <button
-              className="border border-black px-3"
+              className="border border-black px-3 py-1 ml-2"
               type="submit"
-              onClick={handleAddTag}
             >
               Add
             </button>
           </form>
         )}
-        <p>Tags:</p>
-        {blog.tags.length > 0 ? (
-          blog.tags.map((tag, index) => <p key={index}>{tag}</p>)
+        <p className="mt-4 mb-2 font-semibold">Tags:</p>
+        {blog.tags && blog.tags.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {blog.tags.map((tag, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-gray-100 rounded-full px-3 py-1"
+              >
+                <span>{tag}</span>
+                <button
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  onClick={() => handleRemoveTag(tag)}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
         ) : (
           <p>No tags available</p>
         )}
       </div>
       <button
-        className="border border-black px-1 py-2"
+        className="border border-black px-3 py-1 mt-4 rounded"
         onClick={() => setIsAddTag(!isAddTag)}
       >
         {isAddTag ? "Cancel" : "Add a tag"}

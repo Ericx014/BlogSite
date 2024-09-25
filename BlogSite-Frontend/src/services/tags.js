@@ -15,14 +15,29 @@ const getTags = async (token, blogId) => {
 
 // Add tags
 const addTag = async (token, blogId, userId, tag) => {
-  const response = await axios.post(`${baseUrl}/blogs/${blogId}/tags/${userId}`, tag, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.post(
+    `${baseUrl}/blogs/${blogId}/tags/${userId}`,
+    tag,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
 // Remove tags
+const removeTag = async (token, blogId, userId, tagName) => {
+  const response = await axios.delete(
+    `${baseUrl}/blogs/${blogId}/tags/${tagName}/${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
 
-export default {getTags, addTag};
+export default {getTags, addTag, removeTag};

@@ -13,7 +13,7 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/tags", GetAllTags);
             app.MapGet("/tags/{blogId}", GetTags);
             app.MapPost("/blogs/{blogId}/tags/{userId}", AddTagToBlog).RequireAuthorization();
-            app.MapDelete("/blogs/{blogId}/tags/{tagName}", RemoveTagFromBlog).RequireAuthorization();
+            app.MapDelete("/blogs/{blogId}/tags/{tagName}/{userId}", RemoveTagFromBlog).RequireAuthorization();
         }
 
         public static async Task<IResult> GetAllTags (BlogDbContext db)
@@ -88,7 +88,7 @@ namespace BlogSite.Api.Endpoints
 
             if (blog.UserId != userId)
             {
-                return Results.BadRequest("Only authors can add tags");
+                return Results.BadRequest("Only authors can remove tags");
             }
 
             var foundBlogTag = blog.BlogTags.FirstOrDefault(bt => bt.Tag.TagName == tagName);
