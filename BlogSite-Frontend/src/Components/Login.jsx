@@ -1,10 +1,11 @@
-import {useNavigate, Link} from "react-router-dom";
-import {useContext, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import {useState, useContext, useEffect} from "react";
 import {BlogContext} from "../App";
 import AuthServices from "../services/login";
 import UserServices from "../services/users";
 import LoginForm from "./LoginForm";
 import Notification from "./Notification";
+import Register from "./Register";
 
 const Login = () => {
   const {
@@ -23,6 +24,16 @@ const Login = () => {
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     if (notification) {
       const timeout = setTimeout(() => {
@@ -40,7 +51,7 @@ const Login = () => {
       navigate("/");
     }, 360000);
 
-		return () => clearTimeout(logOutTimer);
+    return () => clearTimeout(logOutTimer);
   }, [isLoggedIn, setIsLoggedIn, navigate]);
 
   const handleLogin = async (e) => {
@@ -76,34 +87,58 @@ const Login = () => {
     console.error("Login failed:", error);
   };
 
-  const registrationLink = (
-    <>
-      <p>
-        Dont have an account?{" "}
-        <Link to="/register">
-          <button className="font-semibold hover:underline transition-all">
-            Create one.
-          </button>
-        </Link>
-      </p>
-    </>
+  const or = (
+    <div className="flex items-center justify-center my-4 w-72">
+      <div className="border-t border-gray-500 flex-grow"></div>
+      <span className="mx-2 text-white">or</span>
+      <div className="border-t border-gray-500 flex-grow"></div>
+    </div>
   );
 
   return (
-    <section>
-      <Notification />
-      <h1 className="font-bold uppercase tracking-wider text-xl mb-4">
-        Log in
-      </h1>
-      <LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-      />
-      {registrationLink}
-    </section>
+    <div className="h-screen flex flex-col justify-center">
+      <section className="px-10">
+        <Notification />
+        <h1 className="font-bold capitalize tracking-wide leading-[5rem] text-[5rem] mb-4">
+          Happening now
+        </h1>
+        <h2 className="font-bold text-[2.2rem] mb-6">Start exploring.</h2>
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
+        {or}
+        <div className="flex flex-col gap-2">
+					<button
+						onClick={openModal}
+						className="font-semibold text-[#1d9bf0] tracking-wide rounded-full border border-white h-10 w-72"
+					>
+						Create an account
+					</button>
+					<p className="text-[0.8rem] w-72 leading-4 tracking-tight">
+						By signing up, you agree to the{" "}
+						<span className="text-[#1d9bf0]">Terms of Service</span> and{" "}
+						<span className="text-[#1d9bf0]">Privacy Policy</span>, including{" "}
+						<span className="text-[#1d9bf0]">Cookie Use</span>.
+					</p>
+				</div>
+      </section>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-black p-6 rounded-lg max-w-lg w-full">
+            <button className="text-right text-white" onClick={closeModal}>
+              ×
+            </button>{" "}
+            {/* Close modal button */}
+            <Register /> {/* Render Register component */}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

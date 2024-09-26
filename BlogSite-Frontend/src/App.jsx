@@ -64,7 +64,7 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <section className="font-roboto bg-black h-screen text-white">
       <BlogContext.Provider
         value={{
           token,
@@ -103,7 +103,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </BlogContext.Provider>
-    </>
+    </section>
   );
 };
 

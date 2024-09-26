@@ -5,8 +5,6 @@ const SearchBlogs = ({token, onSearchResults}) => {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
-  // const [fromDate, setFromDate] = useState("");
-  // const [toDate, setToDate] = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
