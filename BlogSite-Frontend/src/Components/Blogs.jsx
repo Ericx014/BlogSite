@@ -32,7 +32,6 @@ const Blogs = () => {
   }, [token]);
 
   const handleChooseBlog = (choice) => {
-    setSearchResults(null);
     setBlogToShow(choice);
   };
 
