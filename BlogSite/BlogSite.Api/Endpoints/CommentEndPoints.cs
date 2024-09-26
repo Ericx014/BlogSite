@@ -1,5 +1,6 @@
 ﻿using BlogSite.Api.Data;
 using BlogSite.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogSite.Api.Endpoints
@@ -10,6 +11,7 @@ namespace BlogSite.Api.Endpoints
         {
             app.MapGet("/comments", GetComments);
             app.MapPost("/comments/{blogId}/{userId}", CreateComment);
+            app.MapPatch("/comments/{blogId}/blog/{commentId}/user/{userId}", EditComment);
             app.MapDelete("/comments/{commentId}/{userId}", DeleteComment);
         }
 
@@ -45,6 +47,36 @@ namespace BlogSite.Api.Endpoints
             };
 
             return Results.Created($"/comments/{comment.Id}", createdComment);
+        }
+
+        public static async Task<IResult> EditComment(BlogDbContext db, [FromBody] string content, int blogId, int userId, int commentId)
+        {
+            var blog = await db.Blogs
+                .Include(b => b.Comments)
+                .FirstOrDefaultAsync(b => b.Id == blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
+            var user = await db.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return Results.NotFound($"User with ID {userId} not found.");
+            }
+            var commentToEdit = await db.Comments.FindAsync(commentId);
+            if (commentToEdit == null)
+            {
+                return Results.NotFound($"Comment with ID {commentId} not found.");
+            }
+            //var commentFound = blog.Comments.FirstOrDefault(c => c.Id == commentId);
+            //if (commentFound == null)
+            //{
+            //    return Results.NotFound($"Comment with ID {commentId} not found.");
+            //}
+            commentToEdit.Content = content;
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
         }
 
         public static async Task<IResult> DeleteComment(BlogDbContext db, int commentId, int userId)

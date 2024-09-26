@@ -9,7 +9,6 @@ namespace BlogSite.Api.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonIgnore]
         public int Id { get; set; }
         public string Content { get; set; } = string.Empty;
 

@@ -25,6 +25,10 @@ namespace BlogSite.Api.Endpoints
         public static async Task<IResult> GetTags(BlogDbContext db, int blogId)
         {
             var blog = await FindBlogWithTag(db, blogId);
+            if (blog == null)
+            {
+                return Results.NotFound($"Blog with ID {blogId} not found.");
+            }
             var tags = blog.BlogTags.Select(bt => bt.Tag.TagName).ToList();
 
             return Results.Ok(tags);
