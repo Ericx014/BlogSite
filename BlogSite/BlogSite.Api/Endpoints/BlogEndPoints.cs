@@ -380,15 +380,15 @@ namespace BlogSite.Api.Endpoints
                     b.BlogTags.Any(bt => bt.Tag.TagName == tag));
             }
 
-            if (fromDate.HasValue)
-            {
-                blogsQuery = blogsQuery.Where(b => b.DateCreated >= fromDate.Value);
-            }
+            //if (fromDate.HasValue)
+            //{
+            //    blogsQuery = blogsQuery.Where(b => b.DateCreated >= fromDate.Value);
+            //}
 
-            if (toDate.HasValue)
-            {
-                blogsQuery = blogsQuery.Where(b => b.DateCreated <= toDate.Value);
-            }
+            //if (toDate.HasValue)
+            //{
+            //    blogsQuery = blogsQuery.Where(b => b.DateCreated <= toDate.Value);
+            //}
 
             var searchResults = await blogsQuery
                 .Select(b => new

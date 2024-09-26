@@ -124,7 +124,7 @@ const Blogs = () => {
 
   const logoutButton = (
     <button
-      className="border border-black rounded-md px-6 py-1"
+      className="border border-black rounded-sm px-6 py-1"
       onClick={handleLogout}
     >
       Log Out
@@ -148,13 +148,13 @@ const Blogs = () => {
       ) : (
         <>
           <button
-            className="bg-white border border-black rounded-lg px-2 py-1"
+            className="bg-white border border-black rounded-sm px-2 py-1"
             onClick={() => handleChooseBlog("random")}
           >
             Random
           </button>
           <button
-            className="bg-white border border-black rounded-lg px-2 py-1"
+            className="bg-white border border-black rounded-sm px-2 py-1"
             onClick={() => handleChooseBlog("myposts")}
           >
             My Posts
@@ -162,7 +162,7 @@ const Blogs = () => {
         </>
       )}
       <Link to="/blogform">
-        <button className="bg-white border border-black rounded-lg px-2 py-1">
+        <button className="bg-white border border-black rounded-sm px-2 py-1">
           Create blog
         </button>
       </Link>

@@ -87,7 +87,7 @@ const BlogTags = ({blog, setBlog}) => {
         )}
       </div>
       <button
-        className="border border-black px-3 py-1 mt-4 rounded"
+        className="border border-black px-3 py-1 mt-4"
         onClick={() => setIsAddTag(!isAddTag)}
       >
         {isAddTag ? "Cancel" : "Add a tag"}

@@ -27,7 +27,7 @@ const SearchBlogs = ({token, onSearchResults}) => {
     <form onSubmit={handleSearch} className="mb-4">
       <input
         type="text"
-        placeholder="Search blogs..."
+        placeholder="Search for blogs"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="border rounded px-2 py-1 mr-2"
@@ -60,7 +60,7 @@ const SearchBlogs = ({token, onSearchResults}) => {
       /> */}
       <button
         type="submit"
-        className="bg-blue-500 text-white rounded px-4 py-1"
+        className="border border-black px-4 py-1 rounded-sm"
       >
         Search
       </button>
