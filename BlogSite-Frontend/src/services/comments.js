@@ -14,14 +14,31 @@ const addComment = async (newComment, blogId, userId, token) => {
   return response.data;
 };
 
-// Add only commentors and blogger can delete the comment
-const deleteComment = async (commentId, userId, token) => {
-  const response = await axios.delete(`${baseUrl}/comments/${commentId}/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+// Edit comment
+const editComment = async (commentId, userId, comment, token) => {
+  const response = await axios.patch(
+    `${baseUrl}/comments/${commentId}/user/${userId}`,
+    comment,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
-export default {addComment, deleteComment};
+// Add only commentors and blogger can delete the comment
+const deleteComment = async (commentId, userId, token) => {
+  const response = await axios.delete(
+    `${baseUrl}/comments/${commentId}/${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export default {addComment, editComment, deleteComment};

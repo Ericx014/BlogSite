@@ -102,6 +102,11 @@ const BlogPage = () => {
   const handleAddComment = async (e) => {
     e.preventDefault();
 
+    if (!commentInput.trim()) {
+      console.log("Comment input cannot be empty");
+      return;
+    }
+
     const newComment = {
       content: commentInput,
     };
@@ -130,6 +135,28 @@ const BlogPage = () => {
       console.log(responseData);
     } catch (e) {
       console.error(e);
+    }
+  };
+  const handleCommentEdit = async (commentId, newContent) => {
+    const editedComment = {
+      content: commentInput,
+    };
+
+    try {
+      await CommentServices.editComment(
+        commentId,
+        currentUser.id,
+        editedComment,
+        token
+      );
+      setBlog({
+        ...blog,
+        comments: blog.comments.map((comment) =>
+          comment.id === commentId ? {...comment, content: newContent} : comment
+        ),
+      });
+    } catch (error) {
+      console.error("Error editing comment:", error);
     }
   };
   const handleCommentDelete = async (commentId) => {
@@ -194,13 +221,14 @@ const BlogPage = () => {
             handleLike={handleLike}
             handleEditBlog={startEdit}
           />
-					<BlogTags blog={blog} setBlog={setBlog} />
+          <BlogTags blog={blog} setBlog={setBlog} />
           <BlogComments
             blog={blog}
             handleAddComment={handleAddComment}
             commentInput={commentInput}
             setCommentInput={setCommentInput}
             handleCommentDelete={handleCommentDelete}
+            handleCommentEdit={handleCommentEdit}
             currentUser={currentUser}
           />
         </>
