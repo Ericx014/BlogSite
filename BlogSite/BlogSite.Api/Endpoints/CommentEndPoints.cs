@@ -22,6 +22,11 @@ namespace BlogSite.Api.Endpoints
         }
         public static async Task<IResult> CreateComment(BlogDbContext db, Comment comment, int blogId, int userId)
         {
+            if (string.IsNullOrWhiteSpace(comment.Content))
+            {
+                return Results.BadRequest("Comment content cannot be empty or null.");
+            }
+
             var blog = await db.Blogs.FindAsync(blogId);
             if (blog == null)
             {
@@ -51,6 +56,11 @@ namespace BlogSite.Api.Endpoints
 
         public static async Task<IResult> EditComment(BlogDbContext db, [FromBody] Comment comment, int commentId, int userId)
         {
+            if (string.IsNullOrWhiteSpace(comment.Content))
+            {
+                return Results.BadRequest("Comment content cannot be empty or null.");
+            }
+
             var commentToEdit = await db.Comments
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(c => c.Id == commentId);

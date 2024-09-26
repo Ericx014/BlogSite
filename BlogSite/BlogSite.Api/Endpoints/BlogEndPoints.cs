@@ -21,9 +21,10 @@ namespace BlogSite.Api.Endpoints
             app.MapGet("/blogs/{userId}/userliked", GetUserLikedBlogs).RequireAuthorization();
             app.MapGet("/blogs/{userId}/userdisliked/", GetUserDislikedBlogs).RequireAuthorization();
             app.MapPost("/blogs", CreateBlog).RequireAuthorization();
-            //app.MapDelete("/blogs", DeleteAllBlogs);
             app.MapDelete("/blogs/{blogId}/{userId}", DeleteBlog).RequireAuthorization();
             app.MapPatch("/blogs/{blogId}/{userId}", UpdateBlogContent).RequireAuthorization();
+            //app.MapDelete("/blogs", DeleteAllBlogs);
+            app.MapGet("/blogs/search", SearchBlogs).RequireAuthorization();
         }
 
         private static async Task<IResult> GetAllBlogs(BlogDbContext db, ClaimsPrincipal user)
@@ -347,6 +348,62 @@ namespace BlogSite.Api.Endpoints
 
             await db.SaveChangesAsync();
             return Results.NoContent();
+        }
+
+        private static async Task<IResult> SearchBlogs(
+            BlogDbContext db,
+            [FromQuery] string? query,
+            [FromQuery] string? category,
+            [FromQuery] string? tag)
+        {
+            var blogsQuery = db.Blogs
+                .Include(b => b.User)
+                .Include(b => b.BlogTags)
+                    .ThenInclude(bt => bt.Tag)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                blogsQuery = blogsQuery.Where(b =>
+                    b.Title.Contains(query) ||
+                    b.Content.Contains(query));
+            }
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                blogsQuery = blogsQuery.Where(b => b.Category == category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(tag))
+            {
+                blogsQuery = blogsQuery.Where(b =>
+                    b.BlogTags.Any(bt => bt.Tag.TagName == tag));
+            }
+
+            if (fromDate.HasValue)
+            {
+                blogsQuery = blogsQuery.Where(b => b.DateCreated >= fromDate.Value);
+            }
+
+            if (toDate.HasValue)
+            {
+                blogsQuery = blogsQuery.Where(b => b.DateCreated <= toDate.Value);
+            }
+
+            var searchResults = await blogsQuery
+                .Select(b => new
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Content = b.Content,
+                    Blogger = b.User.Username,
+                    Category = b.Category,
+                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList(),
+                    DateCreated = b.DateCreated
+                })
+                .ToListAsync();
+
+            return Results.Ok(searchResults);
         }
     }
 }
