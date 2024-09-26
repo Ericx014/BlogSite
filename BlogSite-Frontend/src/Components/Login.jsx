@@ -99,7 +99,7 @@ const Login = () => {
     <div className="h-screen flex flex-col justify-center">
       <section className="px-10">
         <Notification />
-        <h1 className="font-bold capitalize tracking-wide leading-[5rem] text-[5rem] mb-4">
+        <h1 className="font-bold tracking-wide leading-[5.5rem] text-[5rem] mb-10 w-1/2">
           Happening now
         </h1>
         <h2 className="font-bold text-[2.2rem] mb-6">Start exploring.</h2>
@@ -130,7 +130,7 @@ const Login = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
           <div className="bg-black p-6 rounded-lg max-w-lg w-full">
-            <button className="text-right text-white" onClick={closeModal}>
+            <button className="text-right text-white text-3xl" onClick={closeModal}>
               ×
             </button>{" "}
             {/* Close modal button */}

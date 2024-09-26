@@ -70,38 +70,41 @@ const Register = () => {
       <h2 className="font-bold text-[2rem] mb-4 text-white">
         Create an account
       </h2>
-      <form onSubmit={handleRegister} className="flex flex-col gap-3 text-white">
+      <form
+        onSubmit={handleRegister}
+        className="flex flex-col gap-3 text-white"
+      >
         <input
           type="text"
           placeholder="Username"
           value={newUsername}
           onChange={(e) => setNewUsername(e.target.value)}
-          className="border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
+          className="focus:placeholder-transparent border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
         />
         <input
           type="text"
           placeholder="Email"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
-          className="border border-gray-500  bg-black rounded-md h-9 w-72 px-3 py-6"
+          className="focus:placeholder-transparent border border-gray-500  bg-black rounded-md h-9 w-72 px-3 py-6"
         />
         <input
           type="password"
           placeholder="Password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-          className="border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
+          className="focus:placeholder-transparent border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
         />
         <input
           type="password"
           placeholder="Confirm password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
+          className="focus:placeholder-transparent border border-gray-500 bg-black rounded-md h-9 w-72 px-3 py-6"
         />
         <button
           type="submit"
-          className="font-semibold text-[#1d9bf0] text-black tracking-wide hover:underline rounded-full bg-white w-72 py-1 mt-4"
+          className="font-semibold text-[#1d9bf0] text-black tracking-wide rounded-full bg-white h-10 w-72 py-1 mt-4"
         >
           Sign up
         </button>
