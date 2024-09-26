@@ -7,6 +7,7 @@ import BlogForm from "./Components/BlogForm";
 import BlogPage from "./Components/BlogPage";
 import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
+import SearchBlogs from "./Components/SearchBlogs";
 
 export const BlogContext = createContext();
 
@@ -98,6 +99,7 @@ const App = () => {
             <Route path="/blogform" element={<BlogForm />} />
             <Route path="/blogs/blogpage" element={<BlogPage />} />
             <Route path="/blogs/blogger" element={<BloggerPage />} />
+            <Route path="/search" element={<SearchBlogs />} />
           </Routes>
         </BrowserRouter>
       </BlogContext.Provider>

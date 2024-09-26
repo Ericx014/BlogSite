@@ -55,6 +55,16 @@ const deleteBlog = async (userId, blogId, token) => {
   return response.data;
 };
 
+const searchBlogs = async (token, searchParams) => {
+  const response = await axios.get(`${baseUrl}/search`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: searchParams,
+  });
+  return response.data;
+};
+
 const updateBlog = async (updatedBlog, userId, blogId, token) => {
   const response = await axios.patch(
     `${baseUrl}/${blogId}/${userId}`,
@@ -76,4 +86,5 @@ export default {
   getUserLikedBlogs,
   deleteBlog,
   updateBlog,
+  searchBlogs
 };

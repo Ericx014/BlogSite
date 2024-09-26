@@ -138,8 +138,13 @@ const BlogPage = () => {
     }
   };
   const handleCommentEdit = async (commentId, newContent) => {
-    const editedComment = {
-      content: commentInput,
+		if (!newContent.trim()) {
+      console.log("Comment input cannot be empty");
+      return;
+    }
+		
+		const editedComment = {
+      content: newContent,
     };
 
     try {

@@ -2,6 +2,7 @@ import {useEffect, useContext, useState} from "react";
 import {BlogContext} from "../App";
 import {Link, useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
+import SearchBlogs from "./SearchBlogs";
 
 const Blogs = () => {
   const {
@@ -15,13 +16,13 @@ const Blogs = () => {
     setNotification,
     setNotificationType,
     currentUser,
-    currentBlogId,
     setCurrentBlogId,
     setIsLoggedIn,
   } = useContext(BlogContext);
   const navigate = useNavigate();
   const [blogsToShow, setBlogToShow] = useState("random");
   const [displayBlogs, setDisplayBlogs] = useState([...allBlogs]);
+  const [searchResults, setSearchResults] = useState(null);
 
   useEffect(() => {
     if (token) {
@@ -29,6 +30,11 @@ const Blogs = () => {
       fetchAllBlogs();
     }
   }, [token]);
+
+  const handleChooseBlog = (choice) => {
+    setSearchResults(null);
+    setBlogToShow(choice);
+  };
 
   const fetchUserBlogs = async () => {
     if (token) {
@@ -54,12 +60,19 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    if (blogsToShow === "random") {
+    if (searchResults) {
+      setDisplayBlogs(searchResults);
+    } else if (blogsToShow === "random") {
       setDisplayBlogs(allBlogs);
     } else if (blogsToShow === "myposts") {
       setDisplayBlogs(userBlogs);
     }
-  }, [blogsToShow, allBlogs, userBlogs]);
+  }, [blogsToShow, allBlogs, userBlogs, searchResults]);
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    setDisplayBlogs(results);
+  };
 
   const userProfile = (
     <h1 className="font-bold text-lg mb-4">Username: {currentUser.username}</h1>
@@ -102,10 +115,10 @@ const Blogs = () => {
     setNotificationType("success");
     setIsLoggedIn(false);
 
-		localStorage.removeItem("logInStatus");
-		localStorage.removeItem("blogUser");
-		localStorage.removeItem("blogsiteToken");
-		localStorage.removeItem("currentBlogId");
+    localStorage.removeItem("logInStatus");
+    localStorage.removeItem("blogUser");
+    localStorage.removeItem("blogsiteToken");
+    localStorage.removeItem("currentBlogId");
 
     navigate("/");
   };
@@ -122,18 +135,33 @@ const Blogs = () => {
   return (
     <>
       {userProfile}
-      <button
-        className="bg-white border border-black rounded-lg px-2 py-1"
-        onClick={() => setBlogToShow("random")}
-      >
-        Random
-      </button>
-      <button
-        className="bg-white border border-black rounded-lg px-2 py-1"
-        onClick={() => setBlogToShow("myposts")}
-      >
-        My Posts
-      </button>
+      <SearchBlogs token={token} onSearchResults={handleSearchResults} />
+      {searchResults ? (
+        <div className="flex flex-row">
+          <h2 className="font-bold">Search results</h2>
+          <button
+            className="bg-white border border-black px-2"
+            onClick={() => setSearchResults(null)}
+          >
+            Back
+          </button>
+        </div>
+      ) : (
+        <>
+          <button
+            className="bg-white border border-black rounded-lg px-2 py-1"
+            onClick={() => handleChooseBlog("random")}
+          >
+            Random
+          </button>
+          <button
+            className="bg-white border border-black rounded-lg px-2 py-1"
+            onClick={() => handleChooseBlog("myposts")}
+          >
+            My Posts
+          </button>
+        </>
+      )}
       <Link to="/blogform">
         <button className="bg-white border border-black rounded-lg px-2 py-1">
           Create blog
