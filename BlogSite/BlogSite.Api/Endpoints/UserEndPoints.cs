@@ -81,14 +81,19 @@ namespace BlogSite.Api.NewFolder
         {
             if (string.IsNullOrWhiteSpace(request.Username) || request.Username.Length < 6)
             {
-                return Results.BadRequest("Username must be at least 6 characters long and cannot be empty.");
+                return Results.BadRequest("Username must be at least 6 characters long.");
             }
 
-            var passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!.@$%^&*-]).{8,}$";
-            if (string.IsNullOrWhiteSpace(request.Password) || !Regex.IsMatch(request.Password, passwordPattern))
+            if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 8)
             {
-                return Results.BadRequest("Password must be at least 8 characters long, contain at least uppercase letter, one lowercase letter, one digit number and one special symbol.");
+                return Results.BadRequest("Password must be at least 8 characters long.");
             }
+
+            //var passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!.@$%^&*-]).{8,}$";
+            //if (string.IsNullOrWhiteSpace(request.Password) || !Regex.IsMatch(request.Password, passwordPattern))
+            //{
+            //    return Results.BadRequest("Password must be at least 8 characters long, contain at least uppercase letter, one lowercase letter, one digit number and one special symbol.");
+            //}
 
             var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (string.IsNullOrWhiteSpace(request.Email) || !Regex.IsMatch(request.Email, emailPattern))

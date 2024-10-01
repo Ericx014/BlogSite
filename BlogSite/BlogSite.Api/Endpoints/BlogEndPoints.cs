@@ -45,6 +45,7 @@ namespace BlogSite.Api.Endpoints
                     Title = b.Title,
                     Content = b.Content,
                     Blogger = b.User.Username,
+                    BloggerEmail = b.User.Email,
                     Category = b.Category,
                     Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList()
                 })
@@ -402,6 +403,7 @@ namespace BlogSite.Api.Endpoints
                     DateCreated = b.DateCreated
                 })
                 .ToListAsync();
+
 
             return Results.Ok(searchResults);
         }
