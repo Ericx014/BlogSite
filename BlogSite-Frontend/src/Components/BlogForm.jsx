@@ -39,7 +39,7 @@ const BlogForm = () => {
   };
 
   return (
-    <section className="border-b-[1px] border-gray-500">
+    <section className="border-b-[2px] border-gray-700">
       <form onSubmit={handleCreate}>
         <textarea
           id="content"
@@ -50,7 +50,7 @@ const BlogForm = () => {
           className="focus:outline-none bg-transparent resize-none text-xl w-full p-8"
         ></textarea>
         <div className="flex items-center justify-center w-full mb-5">
-          <div className="border-t-[1px] flex-grow rounded-full border-gray-500"></div>
+          <div className="border-t-[1px] flex-grow rounded-full border-gray-700"></div>
         </div>
         <div>
           <input
@@ -59,10 +59,10 @@ const BlogForm = () => {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="focus:placeholder-transparent focus:outline-none border border-gray-500 bg-black rounded-md h-10 w-64 ml-6 px-3"
+            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
           />
           <input
-            className="focus:placeholder-transparent focus:outline-none border border-gray-500 bg-black rounded-md h-10 w-64 ml-6 px-3"
+            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
             placeholder="Category"
             type="text"
             value={category}

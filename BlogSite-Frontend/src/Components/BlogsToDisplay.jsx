@@ -3,7 +3,7 @@ const BlogsToDisplay = ({blogs, handleBlogSelect}) => {
 		{blogs.map((blog) => (
 			<div
 				key={blog.id}
-				className="mb-5 cursor-pointer border-b-[1px] border-gray-500 px-8 py-4"
+				className="mb-5 cursor-pointer border-b-[1px] border-gray-700 px-8 py-4"
 				onClick={() => handleBlogSelect(blog.id)}
 			>
 				<h4 className="font-bold text-xl tracking-wide">{blog.blogger}</h4>

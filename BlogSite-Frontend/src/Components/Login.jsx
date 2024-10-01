@@ -89,9 +89,9 @@ const Login = () => {
 
   const or = (
     <div className="flex items-center justify-center my-4 w-72">
-      <div className="border-t border-gray-500 flex-grow"></div>
+      <div className="border-t border-gray-700 flex-grow"></div>
       <span className="mx-2 text-white">or</span>
-      <div className="border-t border-gray-500 flex-grow"></div>
+      <div className="border-t border-gray-700 flex-grow"></div>
     </div>
   );
 

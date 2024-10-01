@@ -100,7 +100,7 @@ const Blogs = () => {
   };
 
   return (
-    <section className="h-full w-[40rem] border border-gray-500">
+    <section className="h-full w-[40rem] border border-gray-700">
       {/* <h1 className="font-bold text-lg mb-4">
         Username: {currentUser.username}
       </h1>
