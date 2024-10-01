@@ -17,7 +17,7 @@ const LoginForm = ({
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border border-black rounded-full h-10 w-72 px-5 focus:placeholder-transparent"
+          className="focus:outline-none border border-black rounded-full h-10 w-72 px-5 focus:placeholder-transparent"
         />
       </div>
       <div>
@@ -30,7 +30,7 @@ const LoginForm = ({
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-black rounded-full h-10 w-72 px-5 focus:placeholder-transparent"
+          className="focus:outline-none border border-black rounded-full h-10 w-72 px-5 focus:placeholder-transparent"
         />
       </div>
       <button

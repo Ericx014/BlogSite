@@ -1,9 +1,8 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect, createContext} from "react";
-import Blogs from "./Components/Blogs";
+import HomePage from "./Components/HomePage";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
-import BlogForm from "./Components/BlogForm";
 import BlogPage from "./Components/BlogPage";
 import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
@@ -64,7 +63,7 @@ const App = () => {
   }, []);
 
   return (
-    <section className="font-roboto bg-black h-screen text-white">
+    <section className="font-roboto bg-black text-white min-h-screen">
       <BlogContext.Provider
         value={{
           token,
@@ -94,9 +93,8 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route index element={<Login />} />
-            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs" element={<HomePage />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/blogform" element={<BlogForm />} />
             <Route path="/blogs/blogpage" element={<BlogPage />} />
             <Route path="/blogs/blogger" element={<BloggerPage />} />
             <Route path="/search" element={<SearchBlogs />} />

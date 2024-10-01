@@ -1,8 +1,11 @@
 import {useEffect, useContext, useState} from "react";
 import {BlogContext} from "../App";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import MainButtons from "./MainButtons";
+import BlogForm from "./BlogForm";
+import BlogsToDisplay from "./BlogsToDisplay";
+import LogOutButton from "./LogOutButton";
 import BlogServices from "../services/blogs";
-import SearchBlogs from "./SearchBlogs";
 
 const Blogs = () => {
   const {
@@ -63,7 +66,7 @@ const Blogs = () => {
       setDisplayBlogs(searchResults);
     } else if (blogsToShow === "random") {
       setDisplayBlogs(allBlogs);
-    } else if (blogsToShow === "myposts") {
+    } else if (blogsToShow === "my posts") {
       setDisplayBlogs(userBlogs);
     }
   }, [blogsToShow, allBlogs, userBlogs, searchResults]);
@@ -73,37 +76,11 @@ const Blogs = () => {
     setDisplayBlogs(results);
   };
 
-  const userProfile = (
-    <h1 className="font-bold text-lg mb-4">Username: {currentUser.username}</h1>
-  );
-
   const handleBlogSelect = (blogId) => {
     localStorage.setItem("currentBlogId", JSON.stringify(blogId));
     setCurrentBlogId(blogId);
     navigate("blogpage");
   };
-
-  const blogsToDisplay = displayBlogs.map((blog) => (
-    <section
-      key={blog.id}
-      className="mb-5 cursor-pointer"
-      onClick={() => handleBlogSelect(blog.id)}
-    >
-      {/* <p>ID: {blog.id}</p> */}
-      <p>Title: {blog.title}</p>
-      <p>Content: {blog.content}</p>
-      {/* <p>Written by: {blog.blogger.username}</p> */}
-      {/* <div>
-					{blog.comments.map((comment) => (
-						<div key={comment.id} className="comment">
-							<p>Comment ID: {comment.id}</p>
-							<p>Content: {comment.content}</p>
-							<p>Commented by: {comment.userId}</p>
-						</div>
-					))}
-				</div> */}
-    </section>
-  ));
 
   const handleLogout = () => {
     setToken("");
@@ -122,19 +99,12 @@ const Blogs = () => {
     navigate("/");
   };
 
-  const logoutButton = (
-    <button
-      className="border border-black rounded-sm px-6 py-1"
-      onClick={handleLogout}
-    >
-      Log Out
-    </button>
-  );
-
   return (
-    <>
-      {userProfile}
-      <SearchBlogs token={token} onSearchResults={handleSearchResults} />
+    <section className="h-full w-[40rem] border border-gray-500">
+      {/* <h1 className="font-bold text-lg mb-4">
+        Username: {currentUser.username}
+      </h1>
+      <SearchBlogs token={token} onSearchResults={handleSearchResults} /> */}
       {searchResults ? (
         <div className="flex flex-row">
           <h2 className="font-bold">Search results</h2>
@@ -147,28 +117,19 @@ const Blogs = () => {
         </div>
       ) : (
         <>
-          <button
-            className="bg-white border border-black rounded-sm px-2 py-1"
-            onClick={() => handleChooseBlog("random")}
-          >
-            Random
-          </button>
-          <button
-            className="bg-white border border-black rounded-sm px-2 py-1"
-            onClick={() => handleChooseBlog("myposts")}
-          >
-            My Posts
-          </button>
+          <MainButtons
+            handleChooseBlog={handleChooseBlog}
+            blogsToShow={blogsToShow}
+          />
+          <BlogForm />
         </>
       )}
-      <Link to="/blogform">
-        <button className="bg-white border border-black rounded-sm px-2 py-1">
-          Create blog
-        </button>
-      </Link>
-      {blogsToDisplay}
-      {logoutButton}
-    </>
+      <BlogsToDisplay
+        blogs={displayBlogs}
+        handleBlogSelect={handleBlogSelect}
+      />
+      <LogOutButton handleLogout={handleLogout} />
+    </section>
   );
 };
 

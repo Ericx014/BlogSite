@@ -3,7 +3,7 @@ import {useNavigate, Link} from "react-router-dom";
 import {BlogContext} from "../App";
 import UserServices from "../services/users";
 
-const Register = () => {
+const Register = ({setIsModalOpen}) => {
   const [newUsername, setNewUsername] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,6 +21,7 @@ const Register = () => {
     try {
       await UserServices.addUser(newUsername, newEmail, newPassword);
       registrationSuccess();
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Registration failed:", error);
     }
@@ -28,19 +29,27 @@ const Register = () => {
 
   const validateUsername = (username) => {
     if (!username || username.length < 6) {
-      console.error(
-        "Username must be at least 6 characters long and cannot be empty."
-      );
+      console.error("Username must be at least 6 characters long.");
       return;
     }
   };
+  // const validatePassword = (password, repeatPassword) => {
+  //   const passwordPattern =
+  //     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$/;
+  //   if (!password || !passwordPattern.test(password)) {
+  //     console.error(
+  //       "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special symbol."
+  //     );
+  //     return;
+  //   }
+  //   if (password !== repeatPassword) {
+  //     console.error("Passwords do not match.");
+  //     return;
+  //   }
+  // };
   const validatePassword = (password, repeatPassword) => {
-    const passwordPattern =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$/;
-    if (!password || !passwordPattern.test(password)) {
-      console.error(
-        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special symbol."
-      );
+    if (!password || password.length < 6) {
+      console.error("Password must be at least 8 characters long.");
       return;
     }
     if (password !== repeatPassword) {
@@ -104,7 +113,7 @@ const Register = () => {
         />
         <button
           type="submit"
-          className="font-semibold text-[#1d9bf0] text-black tracking-wide rounded-full bg-white h-10 w-72 py-1 mt-4"
+          className="font-semibold text-black tracking-wide rounded-full bg-white h-10 w-72 py-1 mt-4"
         >
           Sign up
         </button>

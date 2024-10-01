@@ -22,7 +22,7 @@ const SearchBlogs = ({token, onSearchResults}) => {
   };
 
   return (
-    <form onSubmit={handleSearch} className="mb-4">
+    <form onSubmit={handleSearch} className="mb-4 text-black">
       <input
         type="text"
         placeholder="Search for blogs"
@@ -58,7 +58,7 @@ const SearchBlogs = ({token, onSearchResults}) => {
       /> */}
       <button
         type="submit"
-        className="border border-black px-4 py-1 rounded-sm"
+        className="border border-black px-4 py-1 text-white rounded-sm"
       >
         Search
       </button>

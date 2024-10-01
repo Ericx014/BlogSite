@@ -112,29 +112,33 @@ const Login = () => {
         />
         {or}
         <div className="flex flex-col gap-2">
-					<button
-						onClick={openModal}
-						className="font-semibold text-[#1d9bf0] tracking-wide rounded-full border border-white h-10 w-72"
-					>
-						Create an account
-					</button>
-					<p className="text-[0.8rem] w-72 leading-4 tracking-tight">
-						By signing up, you agree to the{" "}
-						<span className="text-[#1d9bf0]">Terms of Service</span> and{" "}
-						<span className="text-[#1d9bf0]">Privacy Policy</span>, including{" "}
-						<span className="text-[#1d9bf0]">Cookie Use</span>.
-					</p>
-				</div>
+          <button
+            onClick={openModal}
+            className="font-semibold text-[#1d9bf0] tracking-wide rounded-full border border-white h-10 w-72"
+          >
+            Create an account
+          </button>
+          <p className="text-[0.8rem] w-72 leading-4 tracking-tight">
+            By signing up, you agree to the{" "}
+            <span className="text-[#1d9bf0]">Terms of Service</span> and{" "}
+            <span className="text-[#1d9bf0]">Privacy Policy</span>, including{" "}
+            <span className="text-[#1d9bf0]">Cookie Use</span>.
+          </p>
+        </div>
       </section>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
           <div className="bg-black p-6 rounded-lg max-w-lg w-full">
-            <button className="text-right text-white text-3xl" onClick={closeModal}>
+            <button
+              className="text-right text-white text-3xl"
+              onClick={closeModal}
+            >
               ×
             </button>{" "}
             {/* Close modal button */}
-            <Register /> {/* Render Register component */}
+            <Register setIsModalOpen={setIsModalOpen} />{" "}
+            {/* Render Register component */}
           </div>
         </div>
       )}
