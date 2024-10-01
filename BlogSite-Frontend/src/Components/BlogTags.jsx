@@ -1,6 +1,7 @@
 import {useState, useContext} from "react";
 import TagServices from "../services/tags";
 import {BlogContext} from "../App";
+import Tag from "./Tag";
 
 const BlogTags = ({blog, setBlog}) => {
   const {token, currentUser} = useContext(BlogContext);
@@ -64,34 +65,13 @@ const BlogTags = ({blog, setBlog}) => {
             </button>
           </form>
         )}
-        <p className="mt-4 mb-2 font-semibold">Tags:</p>
-        {blog.tags && blog.tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {blog.tags.map((tag, index) => (
-              <div
-                key={index}
-                className="flex items-center bg-gray-100 rounded-full px-3 py-1"
-              >
-                <span>{tag}</span>
-                <button
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() => handleRemoveTag(tag)}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No tags available</p>
-        )}
+        <Tag
+          blog={blog}
+          handleRemoveTag={handleRemoveTag}
+          isAddTag={isAddTag}
+          setIsAddTag={setIsAddTag}
+        />
       </div>
-      <button
-        className="border border-black px-3 py-1 mt-4"
-        onClick={() => setIsAddTag(!isAddTag)}
-      >
-        {isAddTag ? "Cancel" : "Add a tag"}
-      </button>
     </>
   );
 };

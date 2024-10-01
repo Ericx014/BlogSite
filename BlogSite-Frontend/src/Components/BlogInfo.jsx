@@ -8,14 +8,19 @@ const BlogInfo = ({
   isLiked,
   handleLike,
   handleEditBlog,
+	setBlog
 }) => {
   return (
     <>
-      <h1>{blog.title}</h1>
+      <div className="flex flex-col leading-tight">
+        <p className="font-bold text-lg">
+          <Link to="/blogs/blogger">{blog.blogger.username}</Link>
+        </p>
+        <p className="opacity-70">{blog.blogger.email}</p>
+      </div>
+      <h1 className="font-bold text-2xl tracking-wide">{blog.title}</h1>
       <p>{blog.content}</p>
-      <p>
-        Written by: <Link to="/blogs/blogger">{blog.blogger.username}</Link>
-      </p>
+      <BlogTags blog={blog} setBlog={setBlog} />
       <p>Category: {blog.category}</p>
       <p className="mt-6">Likes: {blog.likesCount}</p>
       <button

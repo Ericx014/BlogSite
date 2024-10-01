@@ -225,8 +225,8 @@ const BlogPage = () => {
             isLiked={isLiked}
             handleLike={handleLike}
             handleEditBlog={startEdit}
+						setBlog={setBlog}
           />
-          <BlogTags blog={blog} setBlog={setBlog} />
           <BlogComments
             blog={blog}
             handleAddComment={handleAddComment}
