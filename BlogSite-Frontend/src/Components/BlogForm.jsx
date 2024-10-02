@@ -25,7 +25,8 @@ const BlogForm = () => {
 
     const newBlog = {
       blog: {title, content, category},
-      tags: tags.split(",").map((tag) => tag.trim()),
+      // tags: tags.split(",").map((tag) => tag.trim()),
+			tags: null,
       userId: currentUser.id,
     };
 

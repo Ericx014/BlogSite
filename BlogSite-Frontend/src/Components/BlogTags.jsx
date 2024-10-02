@@ -72,7 +72,7 @@ const BlogTags = ({blog, setBlog}) => {
                 key={index}
                 className="flex items-center bg-gray-100 rounded-full px-3 py-1"
               >
-                <span>{tag}</span>
+                <span className="text-black">{tag}</span>
                 <button
                   className="ml-2 text-red-500 hover:text-red-700"
                   onClick={() => handleRemoveTag(tag)}
