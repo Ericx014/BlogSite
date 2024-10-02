@@ -50,12 +50,18 @@ const BlogTags = ({blog, setBlog}) => {
         {isAddTag && (
           <form onSubmit={handleAddTag}>
             <input
-              className="border border-black px-2 py-1"
+              className="border border-black px-2 py-1 text-black"
               type="text"
               value={newTagContent}
               placeholder="Enter new tag"
               onChange={(e) => setNewTagContent(e.target.value)}
             />
+            <button
+              className="border border-black px-3 py-1 ml-2"
+              onClick={() => setIsAddTag(false)}
+            >
+              Cancel
+            </button>
             <button
               className="border border-black px-3 py-1 ml-2"
               type="submit"
@@ -64,34 +70,35 @@ const BlogTags = ({blog, setBlog}) => {
             </button>
           </form>
         )}
-        <p className="mt-4 mb-2 font-semibold">Tags:</p>
-        {blog.tags && blog.tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {blog.tags.map((tag, index) => (
-              <div
-                key={index}
-                className="flex items-center bg-gray-100 rounded-full px-3 py-1"
-              >
-                <span className="text-black">{tag}</span>
-                <button
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() => handleRemoveTag(tag)}
+        <div className="flex flex-row gap-2">
+          {blog.tags && blog.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {blog.tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-100 rounded-full px-3 py-1"
                 >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No tags available</p>
-        )}
+                  <span className="text-black">{tag}</span>
+                  <button
+                    className="ml-2 text-red-500 hover:text-red-700"
+                    onClick={() => handleRemoveTag(tag)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No tags available</p>
+          )}
+          {!isAddTag && <button
+            className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-black"
+            onClick={() => setIsAddTag(!isAddTag)}
+          >
+            +
+          </button>}
+        </div>
       </div>
-      <button
-        className="border border-black px-3 py-1 mt-4"
-        onClick={() => setIsAddTag(!isAddTag)}
-      >
-        {isAddTag ? "Cancel" : "Add a tag"}
-      </button>
     </>
   );
 };

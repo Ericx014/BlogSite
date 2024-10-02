@@ -8,6 +8,7 @@ import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
 import EditBlogForm from "./EditBlogForm";
 import BlogTags from "./BlogTags";
+import BlogDetails from "./BlogDetails";
 
 const BlogPage = () => {
   const {
@@ -138,12 +139,12 @@ const BlogPage = () => {
     }
   };
   const handleCommentEdit = async (commentId, newContent) => {
-		if (!newContent.trim()) {
+    if (!newContent.trim()) {
       console.log("Comment input cannot be empty");
       return;
     }
-		
-		const editedComment = {
+
+    const editedComment = {
       content: newContent,
     };
 
@@ -227,6 +228,13 @@ const BlogPage = () => {
             handleEditBlog={startEdit}
           />
           <BlogTags blog={blog} setBlog={setBlog} />
+          <BlogDetails
+            blog={blog}
+            isLiked={isLiked}
+            handleEditBlog={handleEditBlog}
+            handleDelete={handleDelete}
+						currentUser={currentUser}
+          />
           <BlogComments
             blog={blog}
             handleAddComment={handleAddComment}
