@@ -56,17 +56,28 @@ namespace BlogSite.Api.Endpoints
         private static async Task<IResult> GetUserBlogs(BlogDbContext db, ClaimsPrincipal user)
         {
             var currentUsername = user.FindFirstValue("Username");
+            if (currentUsername == null)
+            {
+                return Results.Json(new { message = "You must be logged in to access blogs." }, statusCode: 401);
+            }
 
-            var allBlogs = await db.Blogs
-                .Where(b => b.User.Username == currentUsername)
+            var blogsToReturn = await db.Blogs
+                .Include(b => b.User)
+                .Include(b => b.BlogTags)
+                    .ThenInclude(bt => bt.Tag)
                 .Select(b => new
                 {
                     Id = b.Id,
                     Title = b.Title,
-                    Content = b.Content
+                    Content = b.Content,
+                    Blogger = b.User.Username,
+                    BloggerEmail = b.User.Email,
+                    Category = b.Category,
+                    Tags = b.BlogTags.Select(bt => bt.Tag.TagName).ToList()
                 })
                 .ToListAsync();
-            return Results.Ok(allBlogs);
+
+            return Results.Ok(blogsToReturn);
         }
 
         private static async Task<IResult> GetCategoryBlogs(BlogDbContext db, [FromRoute] string category)
