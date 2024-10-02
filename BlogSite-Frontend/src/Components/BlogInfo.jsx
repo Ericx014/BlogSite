@@ -8,6 +8,7 @@ const BlogInfo = ({
   isLiked,
   handleLike,
   handleEditBlog,
+<<<<<<< HEAD
   setBlog,
 }) => {
   return (
@@ -22,6 +23,16 @@ const BlogInfo = ({
         <BlogTags blog={blog} setBlog={setBlog} />
       </div>
       <div className="w-full border-t border-gray-700"></div>
+=======
+}) => {
+  return (
+    <>
+      <h1>{blog.title}</h1>
+      <p>{blog.content}</p>
+      <p>
+        Written by: <Link to="/blogs/blogger">{blog.blogger.username}</Link>
+      </p>
+>>>>>>> parent of 6978a41 (Updated UI)
       <p>Category: {blog.category}</p>
       <p className="mt-6">Likes: {blog.likesCount}</p>
       <button

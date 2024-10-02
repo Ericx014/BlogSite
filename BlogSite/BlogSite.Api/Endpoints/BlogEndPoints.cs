@@ -239,32 +239,37 @@ namespace BlogSite.Api.Endpoints
             {
                 return Results.NotFound($"User with ID {request.UserId} not found.");
             }
+
             var blog = request.Blog;
             blog.UserId = request.UserId;
 
-            var uniqueTagsToAdd = new HashSet<string>(request.Tags);
-            foreach (var tagName in uniqueTagsToAdd)
+            if (request.Tags != null && request.Tags.Any())
             {
-                var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
-                if (tag == null)
+                var uniqueTagsToAdd = new HashSet<string>(request.Tags);
+                foreach (var tagName in uniqueTagsToAdd)
                 {
-                    tag = new Tag { TagName = tagName };
-                    db.Tags.Add(tag);
-                }
-                if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
-                {
-                    var blogTag = new BlogTag { Blog = blog, Tag = tag };
-                    db.BlogTag.Add(blogTag);
-                }
-                else
-                {
-                    return Results.BadRequest("BlogTag cannot be duplicated");
+                    var tag = await db.Tags.FirstOrDefaultAsync(t => t.TagName == tagName);
+                    if (tag == null)
+                    {
+                        tag = new Tag { TagName = tagName };
+                        db.Tags.Add(tag);
+                    }
+                    if (!blog.BlogTags.Any(bt => bt.TagId == tag.Id))
+                    {
+                        var blogTag = new BlogTag { Blog = blog, Tag = tag };
+                        db.BlogTag.Add(blogTag);
+                    }
+                    else
+                    {
+                        return Results.BadRequest("BlogTag cannot be duplicated");
+                    }
                 }
             }
+
             db.Blogs.Add(blog);
             user.Blogs.Add(blog);
             await db.SaveChangesAsync();
-            return Results.Created($"/blogs/{blog.Id}", new { blog, message="Blog created successfully"});
+            return Results.Created($"/blogs/{blog.Id}", new { blog, message = "Blog created successfully" });
         }
 
         private static async Task<IResult> DeleteAllBlogs(BlogDbContext db)
