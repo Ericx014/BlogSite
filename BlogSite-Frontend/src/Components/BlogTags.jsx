@@ -46,7 +46,7 @@ const BlogTags = ({blog, setBlog}) => {
 
   return (
     <>
-      <div className="">
+      <div className="p-3">
         {isAddTag && (
           <form onSubmit={handleAddTag}>
             <input

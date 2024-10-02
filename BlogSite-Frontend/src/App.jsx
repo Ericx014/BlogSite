@@ -66,44 +66,46 @@ const App = () => {
   }, []);
 
   return (
-    <section className="font-roboto bg-black text-white min-h-screen">
-      <BlogContext.Provider
-        value={{
-          token,
-          setToken,
-          allBlogs,
-          setAllBlogs,
-          userBlogs,
-          setUserBlogs,
-          username,
-          setUsername,
-          password,
-          setPassword,
-          notification,
-          setNotification,
-          notificationType,
-          setNotificationType,
-          currentUser,
-          setCurrentUser,
-          currentBlogId,
-          setCurrentBlogId,
-          isLoggedIn,
-          setIsLoggedIn,
-          userLikedBlogs,
-          setUserLikedBlogs,
-        }}
-      >
-        <BrowserRouter>
-          <Routes>
-            <Route index element={<Login />} />
-            <Route path="/blogs" element={<HomePage />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/blogs/blogpage" element={<BlogPage />} />
-            <Route path="/blogs/blogger" element={<BloggerPage />} />
-            <Route path="/search" element={<SearchBlogs />} />
-          </Routes>
-        </BrowserRouter>
-      </BlogContext.Provider>
+    <section className="font-roboto bg-black text-white">
+      <div className="w-[40rem] min-h-screen border border-gray-700">
+        <BlogContext.Provider
+          value={{
+            token,
+            setToken,
+            allBlogs,
+            setAllBlogs,
+            userBlogs,
+            setUserBlogs,
+            username,
+            setUsername,
+            password,
+            setPassword,
+            notification,
+            setNotification,
+            notificationType,
+            setNotificationType,
+            currentUser,
+            setCurrentUser,
+            currentBlogId,
+            setCurrentBlogId,
+            isLoggedIn,
+            setIsLoggedIn,
+            userLikedBlogs,
+            setUserLikedBlogs,
+          }}
+        >
+          <BrowserRouter>
+            <Routes>
+              <Route index element={<Login />} />
+              <Route path="/blogs" element={<HomePage />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/blogs/blogpage" element={<BlogPage />} />
+              <Route path="/blogs/blogger" element={<BloggerPage />} />
+              <Route path="/search" element={<SearchBlogs />} />
+            </Routes>
+          </BrowserRouter>
+        </BlogContext.Provider>
+      </div>
     </section>
   );
 };
