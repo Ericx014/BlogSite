@@ -7,6 +7,7 @@ import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
 import EditBlogForm from "./EditBlogForm";
+import BlogTags from "./BlogTags";
 
 const BlogPage = () => {
   const {

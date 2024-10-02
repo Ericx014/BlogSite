@@ -3,7 +3,7 @@ import {BlogContext} from "../App";
 // import {useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
 
-const BlogForm = ({addNewBlog}) => {
+const BlogForm = () => {
   const {token, currentUser, setAllBlogs} = useContext(BlogContext);
 
   const [title, setTitle] = useState("");
@@ -32,7 +32,6 @@ const BlogForm = ({addNewBlog}) => {
     try {
       const responseData = await BlogServices.createBlog(newBlog, token);
       console.log("Blog created:", responseData);
-      addNewBlog(responseData.blog);
       setTitle("");
       setContent("");
       setCategory("");

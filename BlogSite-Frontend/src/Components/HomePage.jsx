@@ -34,10 +34,10 @@ const Blogs = () => {
     }
   }, [token]);
 
-  const addNewBlog = useCallback((newBlog) => {
-    setAllBlogs((prevBlogs) => [...prevBlogs, newBlog]);
-    setUserBlogs((prevBlogs) => [...prevBlogs, newBlog]);
-  }, []);
+  // const addNewBlog = useCallback((newBlog) => {
+  //   setAllBlogs((prevBlogs) => [...prevBlogs, newBlog]);
+  //   setUserBlogs((prevBlogs) => [...prevBlogs, newBlog]);
+  // }, []);
 
   const handleChooseBlog = (choice) => {
     setBlogToShow(choice);
@@ -126,7 +126,7 @@ const Blogs = () => {
             handleChooseBlog={handleChooseBlog}
             blogsToShow={blogsToShow}
           />
-          <BlogForm addNewBlog={addNewBlog} />
+          <BlogForm />
         </>
       )}
       <BlogsToDisplay
