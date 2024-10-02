@@ -1,4 +1,4 @@
-import {useEffect, useContext, useState} from "react";
+import {useEffect, useContext, useState, useCallback} from "react";
 import {BlogContext} from "../App";
 import {useNavigate} from "react-router-dom";
 import MainButtons from "./MainButtons";
@@ -33,6 +33,11 @@ const Blogs = () => {
       fetchAllBlogs();
     }
   }, [token]);
+
+  const addNewBlog = useCallback((newBlog) => {
+    setAllBlogs((prevBlogs) => [...prevBlogs, newBlog]);
+    setUserBlogs((prevBlogs) => [...prevBlogs, newBlog]);
+  }, []);
 
   const handleChooseBlog = (choice) => {
     setBlogToShow(choice);
@@ -71,10 +76,10 @@ const Blogs = () => {
     }
   }, [blogsToShow, allBlogs, userBlogs, searchResults]);
 
-  const handleSearchResults = (results) => {
-    setSearchResults(results);
-    setDisplayBlogs(results);
-  };
+  // const handleSearchResults = (results) => {
+  //   setSearchResults(results);
+  //   setDisplayBlogs(results);
+  // };
 
   const handleBlogSelect = (blogId) => {
     localStorage.setItem("currentBlogId", JSON.stringify(blogId));
@@ -121,7 +126,7 @@ const Blogs = () => {
             handleChooseBlog={handleChooseBlog}
             blogsToShow={blogsToShow}
           />
-          <BlogForm />
+          <BlogForm addNewBlog={addNewBlog} />
         </>
       )}
       <BlogsToDisplay

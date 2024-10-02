@@ -1,18 +1,18 @@
 import {useState, useContext, useRef, useEffect} from "react";
 import {BlogContext} from "../App";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
 
-const BlogForm = () => {
-  const {token, currentUser} = useContext(BlogContext);
+const BlogForm = ({addNewBlog}) => {
+  const {token, currentUser, setAllBlogs} = useContext(BlogContext);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-	const textareaRef = useRef(null);
+  const textareaRef = useRef(null);
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -29,13 +29,18 @@ const BlogForm = () => {
       userId: currentUser.id,
     };
 
-    const responseData = await BlogServices.createBlog(newBlog, token);
-    console.log("Blog created:", responseData);
-    setTitle("");
-    setContent("");
-    setCategory("");
-    setTags("");
-    navigate("/blogs");
+    try {
+      const responseData = await BlogServices.createBlog(newBlog, token);
+      console.log("Blog created:", responseData);
+      addNewBlog(responseData.blog);
+      setTitle("");
+      setContent("");
+      setCategory("");
+      setTags("");
+      // navigate("/blogs");
+    } catch (e) {
+      console.e("Failed to created blog", e);
+    }
   };
 
   return (

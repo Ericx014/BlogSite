@@ -29,8 +29,11 @@ const App = () => {
   const storedToken = JSON.parse(localStorage.getItem("blogsiteToken")) || null;
   const [token, setToken] = useState(storedToken);
 
-  const storedCurrentBlogId =
-    JSON.parse(localStorage.getItem("currentBlogId")) || null;
+  // const storedCurrentBlogId =
+  //   JSON.parse(localStorage.getItem("currentBlogId")) || null;
+  const storedCurrentBlogId = localStorage.getItem("currentBlogId")
+    ? JSON.parse(localStorage.getItem("currentBlogId"))
+    : null;
   const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
 
   // useEffect(() => {
