@@ -15,7 +15,10 @@ const BlogDetails = ({
         >
           {isLiked ? "Unlike" : "Like"}
         </button>
-        <p>{": "}{blog.likesCount}</p>
+        <p>
+          {": "}
+          {blog.likesCount}
+        </p>
       </div>
       {/* {blog.blogger.id === currentUser.id && (
         <>

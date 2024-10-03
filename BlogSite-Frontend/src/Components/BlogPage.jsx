@@ -218,7 +218,7 @@ const BlogPage = () => {
 
   return (
     <div className="w-[40rem] min-h-screen border border-gray-700">
-      {!isEditBlog ? (
+      {/* {!isEditBlog ? ( */}
         <>
           <BlogInfo
             blog={blog}
@@ -226,13 +226,16 @@ const BlogPage = () => {
             currentUser={currentUser}
             isLiked={isLiked}
             handleLike={handleLike}
-            handleEditBlog={startEdit}
+            handleEditBlog={handleEditBlog}
+						startEdit={startEdit}
+						isEditBlog={isEditBlog}
           />
           <Divider />
           <BlogDetails
             blog={blog}
             isLiked={isLiked}
             handleEditBlog={handleEditBlog}
+						startEdit={startEdit}
             handleDelete={handleDelete}
             currentUser={currentUser}
             handleLike={handleLike}
@@ -250,7 +253,7 @@ const BlogPage = () => {
             currentUser={currentUser}
           />
         </>
-      ) : (
+      {/* ) : (
         <EditBlogForm
           blog={blog}
           handleEditBlog={handleEditBlog}
@@ -259,7 +262,7 @@ const BlogPage = () => {
           category={category}
           setCategory={setCategory}
         />
-      )}
+      )} */}
     </div>
   );
 };
