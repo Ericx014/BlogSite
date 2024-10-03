@@ -9,6 +9,7 @@ import CommentServices from "../services/comments";
 import EditBlogForm from "./EditBlogForm";
 import BlogTags from "./BlogTags";
 import BlogDetails from "./BlogDetails";
+import Divider from "./Divider";
 
 const BlogPage = () => {
   const {
@@ -216,7 +217,7 @@ const BlogPage = () => {
   if (!blog) return <p>No blog found</p>;
 
   return (
-    <div>
+    <div className="">
       {!isEditBlog ? (
         <>
           <BlogInfo
@@ -227,14 +228,18 @@ const BlogPage = () => {
             handleLike={handleLike}
             handleEditBlog={startEdit}
           />
-          <BlogTags blog={blog} setBlog={setBlog} />
+          <Divider />
           <BlogDetails
             blog={blog}
             isLiked={isLiked}
             handleEditBlog={handleEditBlog}
             handleDelete={handleDelete}
-						currentUser={currentUser}
+            currentUser={currentUser}
+            handleLike={handleLike}
           />
+          <Divider />
+          <BlogTags blog={blog} setBlog={setBlog} />
+          <Divider />
           <BlogComments
             blog={blog}
             handleAddComment={handleAddComment}
@@ -255,12 +260,12 @@ const BlogPage = () => {
           setCategory={setCategory}
         />
       )}
-      <button
+      {/* <button
         onClick={() => console.log(blog)}
         className="border border-black px-2 py-1"
       >
         Blog deets
-      </button>
+      </button> */}
     </div>
   );
 };

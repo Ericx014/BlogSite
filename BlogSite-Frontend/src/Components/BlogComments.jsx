@@ -1,4 +1,7 @@
-import {useState} from "react";
+import {useState, useRef, useEffect} from "react";
+import Divider from "./Divider";
+import AutoTextArea from "./AutoTextArea";
+import RoundBlueButton from "./RoundBlueButton";
 
 const BlogComments = ({
   blog,
@@ -9,6 +12,8 @@ const BlogComments = ({
   handleCommentEdit,
   currentUser,
 }) => {
+  const commentAreaRef = useRef(null);
+
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentContent, setEditCommentContent] = useState("");
 
@@ -28,22 +33,27 @@ const BlogComments = ({
     setEditCommentContent("");
   };
 
+  useEffect(() => {
+    if (commentAreaRef.current) {
+      commentAreaRef.current.style.height = "auto";
+      commentAreaRef.current.style.height = `${commentAreaRef.current.scrollHeight}px`;
+    }
+  }, [commentInput]);
+
   return (
-    <div className="mt-6">
-      <form onSubmit={handleAddComment}>
-        <label>Comment</label>
-        <input
-          className="border border-black"
-          type="text"
+    <>
+      <form onSubmit={handleAddComment} className="flex flex-row items-center justify-between px-3 pb-5"> 
+        <AutoTextArea
+          overwriteClass={"pt-3 px-4 text-md w-[65%] h-3"}
+          ref={commentAreaRef}
+          placeholder="Add a comment"
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
         />
-        <button type="submit" className="border border-black px-1">
-          Add comment
-        </button>
+        <RoundBlueButton text="Add Comment" overwriteClass="w-40 h-10" />
       </form>
-      <p>Comments:</p>
-      {blog.comments.length > 0 ? (
+      <Divider />
+      {blog.comments.length > 0 &&
         blog.comments.map((comment) => (
           <div key={comment.id} className="mb-2 bg-gray-300 w-fit">
             <p>{comment.user}</p>
@@ -57,13 +67,13 @@ const BlogComments = ({
                 />
                 <button
                   onClick={() => submitEdit(comment.id)}
-                  className="border border-black px-1"
+                  className="border border-black px-1 text-white"
                 >
                   Save
                 </button>
                 <button
                   onClick={cancelEditing}
-                  className="border border-black px-1"
+                  className="border border-black px-1 text-white"
                 >
                   Cancel
                 </button>
@@ -98,11 +108,8 @@ const BlogComments = ({
                 </button>
               )}
           </div>
-        ))
-      ) : (
-        <p>No comments available</p>
-      )}
-    </div>
+        ))}
+    </>
   );
 };
 

@@ -66,7 +66,7 @@ const App = () => {
   }, []);
 
   return (
-    <section className="font-roboto bg-black text-white">
+    <section className="font-roboto bg-black text-white flex flex-row justify-center">
       <div className="w-[40rem] min-h-screen border border-gray-700">
         <BlogContext.Provider
           value={{

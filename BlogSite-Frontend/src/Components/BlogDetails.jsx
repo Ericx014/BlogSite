@@ -4,21 +4,20 @@ const BlogDetails = ({
   handleLike,
   handleEditBlog,
   handleDelete,
-	currentUser
+  currentUser,
 }) => {
   return (
-    <>
-      <p>Category: {blog.category}</p>
-      <p className="mt-6">Likes: {blog.likesCount}</p>
-      <button
-        onClick={() => handleLike(blog.id, currentUser.id)}
-        className="border border-black px-2 py-1"
-      >
-        {isLiked ? "Unlike" : "Like"}
-      </button>
-      <p>Created on: {blog.dateCreated}</p>
-      {blog.dateUpdated && <p>Updated: {blog.dateUpdated}</p>}
-      {blog.blogger.id === currentUser.id && (
+    <div className="px-5 py-2">
+      <div className="flex flex-row items-center">
+        <button
+          onClick={() => handleLike(blog.id, currentUser.id)}
+          className="border border-black"
+        >
+          {isLiked ? "Unlike" : "Like"}
+        </button>
+        <p>{": "}{blog.likesCount}</p>
+      </div>
+      {/* {blog.blogger.id === currentUser.id && (
         <>
           <button
             className="border border-black px-1 py-2"
@@ -33,8 +32,8 @@ const BlogDetails = ({
             Delete Blog
           </button>
         </>
-      )}
-    </>
+      )} */}
+    </div>
   );
 };
 export default BlogDetails;

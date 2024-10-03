@@ -1,7 +1,8 @@
 import {useState, useContext, useRef, useEffect} from "react";
 import {BlogContext} from "../App";
-// import {useNavigate} from "react-router-dom";
 import BlogServices from "../services/blogs";
+import AutoTextArea from "./AutoTextArea";
+import RoundBlueButton from "./RoundBlueButton";
 
 const BlogForm = () => {
   const {token, currentUser, setAllBlogs} = useContext(BlogContext);
@@ -46,19 +47,19 @@ const BlogForm = () => {
   return (
     <section className="border-b-[2px] border-gray-700">
       <form onSubmit={handleCreate}>
-        <textarea
-          id="content"
-          placeholder="Tell us your story!"
+        <AutoTextArea
+          overwriteClass="p-8"
           ref={textareaRef}
+          placeholder="Tell us your story!"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="focus:outline-none bg-transparent resize-none text-xl w-full p-8"
-        ></textarea>
+        />
         <div className="flex items-center justify-center w-full mb-5">
           <div className="border-t-[1px] flex-grow rounded-full border-gray-700"></div>
         </div>
         <div>
           <input
+            required
             type="text"
             id="title"
             placeholder="Title"
@@ -67,6 +68,7 @@ const BlogForm = () => {
             className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
           />
           <input
+            required
             className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
             placeholder="Category"
             type="text"
@@ -75,12 +77,7 @@ const BlogForm = () => {
           />
         </div>
         <div className="flex justify-end h-fit w-full">
-          <button
-            type="submit"
-            className="bg-[#1d9bf0] font-semibold rounded-full w-24 h-8 m-8"
-          >
-            Post
-          </button>
+          <RoundBlueButton text="Post" overwriteClass="w-24 h-8 m-8" />
         </div>
       </form>
     </section>
