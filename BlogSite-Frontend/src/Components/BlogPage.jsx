@@ -217,7 +217,7 @@ const BlogPage = () => {
   if (!blog) return <p>No blog found</p>;
 
   return (
-    <div className="">
+    <div className="w-[40rem] min-h-screen border border-gray-700">
       {!isEditBlog ? (
         <>
           <BlogInfo
@@ -260,12 +260,6 @@ const BlogPage = () => {
           setCategory={setCategory}
         />
       )}
-      {/* <button
-        onClick={() => console.log(blog)}
-        className="border border-black px-2 py-1"
-      >
-        Blog deets
-      </button> */}
     </div>
   );
 };
