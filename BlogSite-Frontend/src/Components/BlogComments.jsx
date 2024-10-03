@@ -4,7 +4,7 @@ import AutoTextArea from "./AutoTextArea";
 import RoundBlueButton from "./RoundBlueButton";
 import ThreeDotsIcon from "./ThreeDotsIcon";
 
-const CommentDropdownMenu = ({onEdit, onDelete}) => {
+const DropdownMenu = ({onEdit, onDelete}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
