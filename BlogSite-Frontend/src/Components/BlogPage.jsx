@@ -263,6 +263,7 @@ const BlogPage = () => {
           setCategory={setCategory}
         />
       )} */}
+			<button onClick={console.log(blog)}>Deet</button>
     </div>
   );
 };

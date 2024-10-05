@@ -1,10 +1,13 @@
-import {useRef, useState, useEffect} from "react";
+import {useRef, useState, useEffect, useContext} from "react";
 import ThreeDotsIcon from "./ThreeDotsIcon";
 import {Link} from "react-router-dom";
+import {BlogContext} from "../App";
 
-const BlogDropdownMenu = ({handleDelete, startEdit}) => {
+const BlogDropdownMenu = ({handleDelete, startEdit, blog}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const {currentUser} = useContext(BlogContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -19,24 +22,40 @@ const BlogDropdownMenu = ({handleDelete, startEdit}) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-      >
-        <ThreeDotsIcon />
-      </button>
+      {currentUser.id === blog.blogger.id && (
+        <button
+          onClick={() => {
+            setIsOpen(!isOpen);
+            console.log(currentUser);
+          }}
+          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <ThreeDotsIcon />
+        </button>
+      )}
 
       {isOpen && (
         <div className="absolute right-0 mt-1 w-36 bg-black rounded-xl border border-gray-700 z-50 flex flex-col gap-1">
           <button
-            onClick={startEdit}
-            className="text-left w-[90%] px-4 py-2 mt-2 mx-2 hover:bg-gray-700 rounded-lg text-sm text-white"
+            onClick={() => {
+              startEdit;
+            }}
+            className={`text-left w-[90%] px-4 py-2 mt-2 mx-2 rounded-lg text-sm text-white ${
+              currentUser.id !== blog.blogger.id
+                ? "cursor-not-allowed"
+                : "hover:bg-gray-700"
+            }`}
+            disabled={currentUser.id !== blog.blogger.id}
           >
             Edit post
           </button>
           <button
             onClick={handleDelete}
-            className="transition-all text-left w-[90%] px-4 py-2 mb-2 mx-2 hover:bg-red-500 hover:text-black rounded-lg text-sm text-red-500"
+            className={`transition-all text-left w-[90%] px-4 py-2 mb-2 mx-2 rounded-lg text-sm text-red-500 ${
+              currentUser.id !== blog.blogger.id
+                ? "cursor-not-allowed"
+                : "hover:bg-red-500 hover:text-black"
+            }`}
           >
             Delete post
           </button>
@@ -56,7 +75,7 @@ const BlogInfo = ({blog, startEdit, handleDelete, isEditBlog}) => {
         <p className="opacity-70 leading-3 mb-3">{blog.blogger.email}</p>
         <h1 className="font-bold text-2xl tracking-wide">{blog.title}</h1>
         {isEditBlog ? (
-					<p>is editting</p>
+          <p>is editting</p>
         ) : (
           <p className="mb-5 text-justify">{blog.content}</p>
         )}
@@ -66,6 +85,7 @@ const BlogInfo = ({blog, startEdit, handleDelete, isEditBlog}) => {
       <BlogDropdownMenu
         handleDelete={handleDelete}
         startEdit={startEdit}
+        blog={blog}
       />
     </section>
   );
