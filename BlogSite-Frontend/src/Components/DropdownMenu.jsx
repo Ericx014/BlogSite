@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import {useState, useRef, useEffect, useContext} from "react";
 import ThreeDotsIcon from "./ThreeDotsIcon";
+import {BlogContext} from "../App";
 
-const DropdownMenu = ({onEdit, onDelete}) => {
+const DropdownMenu = ({onEdit, onDelete, comment}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const {currentUser} = useContext(BlogContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,22 +28,28 @@ const DropdownMenu = ({onEdit, onDelete}) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-36 bg-black rounded-xl border border-gray-700 z-50 flex flex-col gap-1">
-          <button
-            onClick={() => {
-              onEdit();
-              setIsOpen(false);
-            }}
-            className="transition-all text-left w-[90%] px-4 py-2 mt-2 mx-2 hover:bg-gray-700 rounded-lg text-sm text-white"
-          >
-            Edit
-          </button>
+        <div className="absolute right-0 mt-1 w-36 bg-black rounded-xl border border-gray-700 z-50 flex flex-col gap-1 justify-center items-center">
+          {currentUser.id === comment.userId && (
+            <button
+              onClick={() => {
+                onEdit();
+                setIsOpen(false);
+              }}
+              className={
+                "transition-all text-left w-[90%] px-4 py-2 mt-2 mx-2 hover:bg-gray-700 rounded-lg text-sm text-white"
+              }
+            >
+              Edit
+            </button>
+          )}
           <button
             onClick={() => {
               onDelete();
               setIsOpen(false);
             }}
-            className="transition-all text-left w-[90%] px-4 py-2 mb-2 mx-2 hover:bg-red-500 hover:text-black rounded-lg text-sm text-red-500"
+            className={`transition-all text-left w-[90%] px-4 py-2 mb-2 mx-2 hover:bg-red-500 hover:text-black rounded-lg text-sm text-red-500 ${
+              currentUser.id !== comment.userId && "mt-2"
+            }`}
           >
             Delete
           </button>

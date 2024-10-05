@@ -82,12 +82,16 @@ const BlogComments = ({
                   {comment.dateCreated}
                 </p>
               </div>
-              {comment.user === currentUser?.username && !editingCommentId && (
-                <DropdownMenu
-                  onEdit={() => startEditing(comment)}
-                  onDelete={() => handleCommentDelete(comment.id)}
-                />
-              )}
+              {(comment.user === currentUser?.username ||
+                blog.blogger.id === currentUser.id) &&
+                !editingCommentId && (
+                  <DropdownMenu
+                    onEdit={() => startEditing(comment)}
+                    onDelete={() => handleCommentDelete(comment.id)}
+										comment={comment}
+                  />
+                )}
+              {/* <button onClick={() => console.log(comment)}>Comment deet</button> */}
             </div>
             <Divider />
           </div>
