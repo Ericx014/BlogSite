@@ -89,7 +89,8 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog}) => {
         {editBlogId === blog.id ? (
           <form>
             <textarea
-              className="text-black"
+							required
+              zlassName="text-black"
               value={editBlogContent}
               onChange={(e) => setEditBlogContent(e.target.value)}
             ></textarea>
