@@ -24,7 +24,6 @@ const BlogPage = () => {
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-  const [isEditBlog, setIsEditBlog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -198,7 +197,6 @@ const BlogPage = () => {
         token
       );
       setBlog(updatedBlog);
-      setIsEditBlog(false);
     } catch (e) {
       console.error(e);
     }
@@ -218,7 +216,6 @@ const BlogPage = () => {
           isLiked={isLiked}
           handleLike={handleLike}
           handleEditBlog={handleEditBlog}
-          isEditBlog={isEditBlog}
         />
         <Divider />
         <BlogDetails
