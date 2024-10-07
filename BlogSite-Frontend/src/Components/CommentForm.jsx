@@ -20,7 +20,7 @@ const CommentForm = ({
         value={commentInput}
         onChange={(e) => setCommentInput(e.target.value)}
       />
-      <RoundBlueButton text="Post Comment" overwriteClass="w-48 h-10" />
+      <RoundBlueButton text="Post Comment" overwriteClass="w-48 h-10 mr-5" />
     </form>
     <Divider />
   </>

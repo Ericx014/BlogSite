@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {BlogContext} from "../App";
 import BlogInfo from "./BlogInfo";
@@ -6,7 +6,6 @@ import BlogComments from "./BlogComments";
 import BlogServices from "../services/blogs";
 import LikeServices from "../services/likes";
 import CommentServices from "../services/comments";
-import EditBlogForm from "./EditBlogForm";
 import BlogTags from "./BlogTags";
 import BlogDetails from "./BlogDetails";
 import Divider from "./Divider";
@@ -188,16 +187,12 @@ const BlogPage = () => {
       console.error(e);
     }
   };
-  const startEdit = () => {
-    setIsEditBlog(true);
-  };
-  const handleEditBlog = async (e) => {
+  const handleEditBlog = async (e, updatedContent) => {
     e.preventDefault();
     try {
       const updatedBlog = {
         ...blog,
-        content,
-        category,
+        content: updatedContent,
       };
       await BlogServices.updateBlog(
         updatedBlog,
@@ -218,7 +213,6 @@ const BlogPage = () => {
 
   return (
     <div className="w-[40rem] min-h-screen border border-gray-700">
-      {/* {!isEditBlog ? ( */}
         <>
           <BlogInfo
             blog={blog}
@@ -227,7 +221,6 @@ const BlogPage = () => {
             isLiked={isLiked}
             handleLike={handleLike}
             handleEditBlog={handleEditBlog}
-						startEdit={startEdit}
 						isEditBlog={isEditBlog}
           />
           <Divider />
@@ -235,7 +228,6 @@ const BlogPage = () => {
             blog={blog}
             isLiked={isLiked}
             handleEditBlog={handleEditBlog}
-						startEdit={startEdit}
             handleDelete={handleDelete}
             currentUser={currentUser}
             handleLike={handleLike}
@@ -253,17 +245,6 @@ const BlogPage = () => {
             currentUser={currentUser}
           />
         </>
-      {/* ) : (
-        <EditBlogForm
-          blog={blog}
-          handleEditBlog={handleEditBlog}
-          content={content}
-          setContent={setContent}
-          category={category}
-          setCategory={setCategory}
-        />
-      )} */}
-			<button onClick={console.log(blog)}>Deet</button>
     </div>
   );
 };
