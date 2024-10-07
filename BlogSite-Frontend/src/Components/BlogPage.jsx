@@ -25,8 +25,6 @@ const BlogPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [isEditBlog, setIsEditBlog] = useState(false);
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,8 +37,6 @@ const BlogPage = () => {
           token
         );
         setBlog(fetchedBlog);
-        setContent(fetchedBlog.content);
-        setCategory(fetchedBlog.category);
         setError(null);
         setIsLiked(userLikedBlogs.includes(fetchedBlog.id));
         console.log(userLikedBlogs);
@@ -76,6 +72,7 @@ const BlogPage = () => {
     };
     fetchUserLikedBlogs();
   }, [currentUser, token, isLoggedIn]);
+
   const handleLike = async (blogId, userId) => {
     try {
       if (isLiked) {
@@ -213,38 +210,38 @@ const BlogPage = () => {
 
   return (
     <div className="w-[40rem] min-h-screen border border-gray-700">
-        <>
-          <BlogInfo
-            blog={blog}
-            handleDelete={handleDelete}
-            currentUser={currentUser}
-            isLiked={isLiked}
-            handleLike={handleLike}
-            handleEditBlog={handleEditBlog}
-						isEditBlog={isEditBlog}
-          />
-          <Divider />
-          <BlogDetails
-            blog={blog}
-            isLiked={isLiked}
-            handleEditBlog={handleEditBlog}
-            handleDelete={handleDelete}
-            currentUser={currentUser}
-            handleLike={handleLike}
-          />
-          <Divider />
-          <BlogTags blog={blog} setBlog={setBlog} />
-          <Divider />
-          <BlogComments
-            blog={blog}
-            handleAddComment={handleAddComment}
-            commentInput={commentInput}
-            setCommentInput={setCommentInput}
-            handleCommentDelete={handleCommentDelete}
-            handleCommentEdit={handleCommentEdit}
-            currentUser={currentUser}
-          />
-        </>
+      <>
+        <BlogInfo
+          blog={blog}
+          handleDelete={handleDelete}
+          currentUser={currentUser}
+          isLiked={isLiked}
+          handleLike={handleLike}
+          handleEditBlog={handleEditBlog}
+          isEditBlog={isEditBlog}
+        />
+        <Divider />
+        <BlogDetails
+          blog={blog}
+          isLiked={isLiked}
+          handleEditBlog={handleEditBlog}
+          handleDelete={handleDelete}
+          currentUser={currentUser}
+          handleLike={handleLike}
+        />
+        <Divider />
+        <BlogTags blog={blog} setBlog={setBlog} />
+        <Divider />
+        <BlogComments
+          blog={blog}
+          handleAddComment={handleAddComment}
+          commentInput={commentInput}
+          setCommentInput={setCommentInput}
+          handleCommentDelete={handleCommentDelete}
+          handleCommentEdit={handleCommentEdit}
+          currentUser={currentUser}
+        />
+      </>
     </div>
   );
 };
