@@ -6,7 +6,7 @@ const MainButtons = ({handleChooseBlog, blogsToShow}) => {
       <BlogViewButton
         handleChooseBlog={handleChooseBlog}
         blogsToShow={blogsToShow}
-        buttonFor="random"
+        buttonFor="explore"
       />
       <BlogViewButton
         handleChooseBlog={handleChooseBlog}

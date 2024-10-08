@@ -3,7 +3,7 @@ import ActiveUnderline from "./ActiveUnderline";
 const BlogViewButton = ({handleChooseBlog, blogsToShow, buttonFor}) => {	
 	return (
     <button
-      className="border border-none flex-grow hover:bg-gray-700 hover:bg-opacity-50"
+      className="transition-all border border-none flex-grow hover:bg-gray-700 hover:bg-opacity-50"
       onClick={() => handleChooseBlog(buttonFor)}
     >
       <div className="flex flex-col items-center  justify-center h-full">

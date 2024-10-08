@@ -5,7 +5,7 @@ import AutoTextArea from "./AutoTextArea";
 import RoundBlueButton from "./RoundBlueButton";
 
 const BlogForm = () => {
-  const {token, currentUser, setAllBlogs} = useContext(BlogContext);
+  const {token, currentUser} = useContext(BlogContext);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -25,7 +25,6 @@ const BlogForm = () => {
 
     const newBlog = {
       blog: {title, content, category},
-      // tags: tags.split(",").map((tag) => tag.trim()),
 			tags: null,
       userId: currentUser.id,
     };
@@ -37,7 +36,6 @@ const BlogForm = () => {
       setContent("");
       setCategory("");
       setTags("");
-      // navigate("/blogs");
     } catch (e) {
       console.e("Failed to created blog", e);
     }
@@ -56,7 +54,7 @@ const BlogForm = () => {
         <div className="flex items-center justify-center w-full mb-5">
           <div className="border-t-[1px] flex-grow rounded-full border-gray-700"></div>
         </div>
-        <div>
+        <div className="w-full flex ml-8 gap-6">
           <input
             required
             type="text"
@@ -64,11 +62,11 @@ const BlogForm = () => {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
+            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-56 px-3"
           />
           <input
             required
-            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-64 ml-6 px-3"
+            className="focus:placeholder-transparent focus:outline-none border border-gray-600 bg-black rounded-md h-10 w-56 px-3"
             placeholder="Category"
             type="text"
             value={category}

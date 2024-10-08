@@ -5,6 +5,7 @@ import MainButtons from "./MainButtons";
 import BlogForm from "./BlogForm";
 import BlogsToDisplay from "./BlogsToDisplay";
 import BlogServices from "../services/blogs";
+import Sidebar from "./Sidebar";
 
 const Blogs = () => {
   const {
@@ -13,10 +14,11 @@ const Blogs = () => {
     setAllBlogs,
     userBlogs,
     setUserBlogs,
+    currentUser,
     setCurrentBlogId,
   } = useContext(BlogContext);
   const navigate = useNavigate();
-  const [blogsToShow, setBlogToShow] = useState("random");
+  const [blogsToShow, setBlogToShow] = useState("explore");
   const [displayBlogs, setDisplayBlogs] = useState([...allBlogs]);
   const [searchResults, setSearchResults] = useState(null);
 
@@ -62,10 +64,14 @@ const Blogs = () => {
   useEffect(() => {
     if (searchResults) {
       setDisplayBlogs(searchResults);
-    } else if (blogsToShow === "random") {
+    } else if (blogsToShow === "explore") {
       setDisplayBlogs(allBlogs);
     } else if (blogsToShow === "my posts") {
-      setDisplayBlogs(userBlogs);
+      const filteredBlogs = allBlogs.filter(
+        (blog) => blog.blogger === currentUser.username
+      );
+
+      setDisplayBlogs(filteredBlogs);
     }
   }, [blogsToShow, allBlogs, userBlogs, searchResults]);
 
@@ -81,38 +87,37 @@ const Blogs = () => {
   };
 
   return (
-    <section
-      className="w-[40rem] min-h-screen border border-gray-700 flex flex-row"
-    >
-      <div>
-				{/* <h1 className="font-bold text-lg mb-4">
+    <section className="w-[50rem] min-h-screen border border-gray-700 flex flex-row">
+      <Sidebar handleChooseBlog={handleChooseBlog} />
+      <div className="ml-[15rem]">
+        {/* <h1 className="font-bold text-lg mb-4">
 					Username: {currentUser.username}
 				</h1>
 				<SearchBlogs token={token} onSearchResults={handleSearchResults} /> */}
-				{searchResults ? (
-					<div className="flex flex-row">
-						<h2 className="font-bold">Search results</h2>
-						<button
-							className="bg-white border border-black px-2"
-							onClick={() => setSearchResults(null)}
-						>
-							Back
-						</button>
-					</div>
-				) : (
-					<>
-						<MainButtons
-							handleChooseBlog={handleChooseBlog}
-							blogsToShow={blogsToShow}
-						/>
-						<BlogForm />
-					</>
-				)}
-				<BlogsToDisplay
-					blogs={displayBlogs}
-					handleBlogSelect={handleBlogSelect}
-				/>
-			</div>
+        {searchResults ? (
+          <div className="flex flex-row">
+            <h2 className="font-bold">Search results</h2>
+            <button
+              className="bg-white border border-black px-2"
+              onClick={() => setSearchResults(null)}
+            >
+              Back
+            </button>
+          </div>
+        ) : (
+          <>
+            <MainButtons
+              handleChooseBlog={handleChooseBlog}
+              blogsToShow={blogsToShow}
+            />
+            <BlogForm />
+          </>
+        )}
+        <BlogsToDisplay
+          blogs={displayBlogs}
+          handleBlogSelect={handleBlogSelect}
+        />
+      </div>
     </section>
   );
 };

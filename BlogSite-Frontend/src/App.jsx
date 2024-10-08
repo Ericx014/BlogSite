@@ -7,7 +7,6 @@ import BlogPage from "./Components/BlogPage";
 import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
 import SearchBlogs from "./Components/SearchBlogs";
-import Sidebar from "./Components/Sidebar";
 
 export const BlogContext = createContext();
 
@@ -30,22 +29,10 @@ const App = () => {
   const storedToken = JSON.parse(localStorage.getItem("blogsiteToken")) || null;
   const [token, setToken] = useState(storedToken);
 
-  // const storedCurrentBlogId =
-  //   JSON.parse(localStorage.getItem("currentBlogId")) || null;
   const storedCurrentBlogId = localStorage.getItem("currentBlogId")
     ? JSON.parse(localStorage.getItem("currentBlogId"))
     : null;
   const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
-
-  // useEffect(() => {
-  //   const clearLocalStorage = () => {
-  //     localStorage.clear();
-  //   };
-  //   window.addEventListener("beforeunload", clearLocalStorage);
-  //   return () => {
-  //     window.removeEventListener("beforeunload", clearLocalStorage);
-  //   };
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,8 +54,7 @@ const App = () => {
   }, []);
 
   return (
-    <section className="font-roboto bg-black text-white">
-      <div className="flex flex-row justify-center">
+    <section className="font-roboto bg-black text-white flex justify-center">
         <BlogContext.Provider
           value={{
             token,
@@ -96,9 +82,6 @@ const App = () => {
           }}
         >
           <BrowserRouter>
-            {location.pathname !== "/" && location.pathname !== "/register" && (
-              <Sidebar />
-            )}
             <Routes>
               <Route index element={<Login />} />
               <Route path="/blogs" element={<HomePage />} />
@@ -109,7 +92,6 @@ const App = () => {
             </Routes>
           </BrowserRouter>
         </BlogContext.Provider>
-      </div>
     </section>
   );
 };

@@ -217,47 +217,49 @@ const BlogPage = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="h-screen">Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!blog) return <p>No blog found</p>;
 
   return (
-    <div className="w-[40rem] min-h-screen border border-gray-700">
-      <>
-        <BlogInfo
-          blog={blog}
-          handleDelete={handleDelete}
-          currentUser={currentUser}
-          isLiked={isLiked}
-          handleLike={handleLike}
-          handleEditBlog={handleEditBlog}
-          formatDate={formatDate}
-        />
-        <Divider />
-        <BlogDetails
-          blog={blog}
-          isLiked={isLiked}
-          handleEditBlog={handleEditBlog}
-          handleDelete={handleDelete}
-          currentUser={currentUser}
-          handleLike={handleLike}
-          formatDate={formatDate}
-        />
-        <Divider />
-        <BlogTags blog={blog} setBlog={setBlog} />
-        <Divider />
-        <BlogComments
-          blog={blog}
-          handleAddComment={handleAddComment}
-          commentInput={commentInput}
-          setCommentInput={setCommentInput}
-          handleCommentDelete={handleCommentDelete}
-          handleCommentEdit={handleCommentEdit}
-          currentUser={currentUser}
-          formatDate={formatDate}
-        />
-      </>
-    </div>
+    <section className="flex">
+			<div className="w-[40rem] min-h-screen border border-gray-700">
+				<>
+					<BlogInfo
+						blog={blog}
+						handleDelete={handleDelete}
+						currentUser={currentUser}
+						isLiked={isLiked}
+						handleLike={handleLike}
+						handleEditBlog={handleEditBlog}
+						formatDate={formatDate}
+					/>
+					<Divider />
+					<BlogDetails
+						blog={blog}
+						isLiked={isLiked}
+						handleEditBlog={handleEditBlog}
+						handleDelete={handleDelete}
+						currentUser={currentUser}
+						handleLike={handleLike}
+						formatDate={formatDate}
+					/>
+					<Divider />
+					<BlogTags blog={blog} setBlog={setBlog} />
+					<Divider />
+					<BlogComments
+						blog={blog}
+						handleAddComment={handleAddComment}
+						commentInput={commentInput}
+						setCommentInput={setCommentInput}
+						handleCommentDelete={handleCommentDelete}
+						handleCommentEdit={handleCommentEdit}
+						currentUser={currentUser}
+						formatDate={formatDate}
+					/>
+				</>
+			</div>
+		</section>
   );
 };
 

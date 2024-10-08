@@ -13,7 +13,7 @@ const BlogsToDisplay = ({blogs, handleBlogSelect}) => {
 					</div>
           <p className="font-bold text-xl tracking-wide">{blog.title}</p>
           <p>{blog.content}</p>
-        </div>
+        </div> 
       ))}
     </section>
   );
