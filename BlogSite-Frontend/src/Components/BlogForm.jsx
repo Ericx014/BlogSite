@@ -10,7 +10,6 @@ const BlogForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
   // const navigate = useNavigate();
 
   const textareaRef = useRef(null);
@@ -35,7 +34,6 @@ const BlogForm = () => {
       setTitle("");
       setContent("");
       setCategory("");
-      setTags("");
     } catch (e) {
       console.e("Failed to created blog", e);
     }

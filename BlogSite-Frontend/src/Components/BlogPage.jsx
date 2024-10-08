@@ -9,6 +9,7 @@ import CommentServices from "../services/comments";
 import BlogTags from "./BlogTags";
 import BlogDetails from "./BlogDetails";
 import Divider from "./Divider";
+import Sidebar from "./Sidebar";
 
 const BlogPage = () => {
   const {
@@ -18,6 +19,7 @@ const BlogPage = () => {
     isLoggedIn,
     currentUser,
     setUserLikedBlogs,
+		setBlogToShow
   } = useContext(BlogContext);
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +40,6 @@ const BlogPage = () => {
         setBlog(fetchedBlog);
         setError(null);
         setIsLiked(userLikedBlogs.includes(fetchedBlog.id));
-        console.log(userLikedBlogs);
       } catch (err) {
         console.error("Failed to fetch blog:", err);
         setError("Failed to load blog. Please try again later.");
@@ -222,44 +223,43 @@ const BlogPage = () => {
   if (!blog) return <p>No blog found</p>;
 
   return (
-    <section className="flex">
-			<div className="w-[40rem] min-h-screen border border-gray-700">
-				<>
-					<BlogInfo
-						blog={blog}
-						handleDelete={handleDelete}
-						currentUser={currentUser}
-						isLiked={isLiked}
-						handleLike={handleLike}
-						handleEditBlog={handleEditBlog}
-						formatDate={formatDate}
-					/>
-					<Divider />
-					<BlogDetails
-						blog={blog}
-						isLiked={isLiked}
-						handleEditBlog={handleEditBlog}
-						handleDelete={handleDelete}
-						currentUser={currentUser}
-						handleLike={handleLike}
-						formatDate={formatDate}
-					/>
-					<Divider />
-					<BlogTags blog={blog} setBlog={setBlog} />
-					<Divider />
-					<BlogComments
-						blog={blog}
-						handleAddComment={handleAddComment}
-						commentInput={commentInput}
-						setCommentInput={setCommentInput}
-						handleCommentDelete={handleCommentDelete}
-						handleCommentEdit={handleCommentEdit}
-						currentUser={currentUser}
-						formatDate={formatDate}
-					/>
-				</>
-			</div>
-		</section>
+    <section className="w-[50rem] border border-gray-700 min-h-screen flex flex-row">
+      <Sidebar setBlogToShow={setBlogToShow} />
+      <div className="ml-[15rem] w-[70%]">
+        <BlogInfo
+          blog={blog}
+          handleDelete={handleDelete}
+          currentUser={currentUser}
+          isLiked={isLiked}
+          handleLike={handleLike}
+          handleEditBlog={handleEditBlog}
+          formatDate={formatDate}
+        />
+        <Divider />
+        <BlogDetails
+          blog={blog}
+          isLiked={isLiked}
+          handleEditBlog={handleEditBlog}
+          handleDelete={handleDelete}
+          currentUser={currentUser}
+          handleLike={handleLike}
+          formatDate={formatDate}
+        />
+        <Divider />
+        <BlogTags blog={blog} setBlog={setBlog} />
+        <Divider />
+        <BlogComments
+          blog={blog}
+          handleAddComment={handleAddComment}
+          commentInput={commentInput}
+          setCommentInput={setCommentInput}
+          handleCommentDelete={handleCommentDelete}
+          handleCommentEdit={handleCommentEdit}
+          currentUser={currentUser}
+          formatDate={formatDate}
+        />
+      </div>
+    </section>
   );
 };
 

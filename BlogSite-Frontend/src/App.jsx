@@ -34,6 +34,9 @@ const App = () => {
     : null;
   const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
 
+  const [blogsToShow, setBlogToShow] = useState("explore");
+  const [displayBlogs, setDisplayBlogs] = useState([...allBlogs]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (storedToken && isLoggedIn) {
@@ -53,45 +56,90 @@ const App = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      fetchUserBlogs();
+      fetchAllBlogs();
+    }
+  }, [token]);
+
+  const fetchUserBlogs = async () => {
+    if (token) {
+      try {
+        const responseData = await BlogServices.getUserBlogs(token);
+        setUserBlogs(responseData);
+        console.log(responseData);
+      } catch (error) {
+        console.error("Failed to fetch user blogs:", error);
+      }
+    }
+  };
+
+  const fetchAllBlogs = async () => {
+    if (token) {
+      try {
+        const responseData = await BlogServices.getAllBlogs(token);
+        setAllBlogs(responseData);
+      } catch (error) {
+        console.error("Failed to fetch all blogs:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (blogsToShow === "explore") {
+      setDisplayBlogs(allBlogs);
+    } else if (blogsToShow === "my posts") {
+      const filteredBlogs = allBlogs.filter(
+        (blog) => blog.blogger === currentUser.username
+      );
+
+      setDisplayBlogs(filteredBlogs);
+    }
+  }, [blogsToShow, allBlogs, userBlogs]);
+
   return (
     <section className="font-roboto bg-black text-white flex justify-center">
-        <BlogContext.Provider
-          value={{
-            token,
-            setToken,
-            allBlogs,
-            setAllBlogs,
-            userBlogs,
-            setUserBlogs,
-            username,
-            setUsername,
-            password,
-            setPassword,
-            notification,
-            setNotification,
-            notificationType,
-            setNotificationType,
-            currentUser,
-            setCurrentUser,
-            currentBlogId,
-            setCurrentBlogId,
-            isLoggedIn,
-            setIsLoggedIn,
-            userLikedBlogs,
-            setUserLikedBlogs,
-          }}
-        >
-          <BrowserRouter>
-            <Routes>
-              <Route index element={<Login />} />
-              <Route path="/blogs" element={<HomePage />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/blogs/blogpage" element={<BlogPage />} />
-              <Route path="/blogs/blogger" element={<BloggerPage />} />
-              <Route path="/search" element={<SearchBlogs />} />
-            </Routes>
-          </BrowserRouter>
-        </BlogContext.Provider>
+      <BlogContext.Provider
+        value={{
+          token,
+          setToken,
+          allBlogs,
+          setAllBlogs,
+          userBlogs,
+          setUserBlogs,
+          username,
+          setUsername,
+          password,
+          setPassword,
+          notification,
+          setNotification,
+          notificationType,
+          setNotificationType,
+          currentUser,
+          setCurrentUser,
+          currentBlogId,
+          setCurrentBlogId,
+          isLoggedIn,
+          setIsLoggedIn,
+          userLikedBlogs,
+          setUserLikedBlogs,
+          blogsToShow,
+          displayBlogs,
+          setBlogToShow,
+        }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<Login />} />
+            <Route path="/blogs" element={<HomePage />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/blogs/blogpage" element={<BlogPage />} />
+            <Route path="/blogs/blogger" element={<BloggerPage />} />
+            <Route path="/search" element={<SearchBlogs />} />
+          </Routes>
+        </BrowserRouter>
+      </BlogContext.Provider>
     </section>
   );
 };

@@ -1,5 +1,7 @@
 import {useState} from "react";
 import BlogServices from "../services/blogs";
+import Sidebar from "./Sidebar";
+import RoundBlueButton from "./RoundBlueButton";
 
 const SearchBlogs = ({token, onSearchResults}) => {
   const [query, setQuery] = useState("");
@@ -14,7 +16,7 @@ const SearchBlogs = ({token, onSearchResults}) => {
         category,
         tag,
       });
-			console.log("Search response:", response);
+      console.log("Search response:", response);
       onSearchResults(response);
     } catch (error) {
       console.error("Failed to search blogs:", error);
@@ -22,47 +24,35 @@ const SearchBlogs = ({token, onSearchResults}) => {
   };
 
   return (
-    <form onSubmit={handleSearch} className="mb-4 text-black">
-      <input
-        type="text"
-        placeholder="Search for blogs"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="border rounded px-2 py-1 mr-2"
-      />
-      <input
-        type="text"
-        placeholder="Category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border rounded px-2 py-1 mr-2"
-      />
-      <input
-        type="text"
-        placeholder="Tag"
-        value={tag}
-        onChange={(e) => setTag(e.target.value)}
-        className="border rounded px-2 py-1 mr-2"
-      />
-      {/* <input
-        type="date"
-        value={fromDate}
-        onChange={(e) => setFromDate(e.target.value)}
-        className="border rounded px-2 py-1 mr-2"
-      />
-      <input
-        type="date"
-        value={toDate}
-        onChange={(e) => setToDate(e.target.value)}
-        className="border rounded px-2 py-1 mr-2"
-      /> */}
-      <button
-        type="submit"
-        className="border border-black px-4 py-1 text-white rounded-sm"
-      >
-        Search
-      </button>
-    </form>
+    <section className="w-[50rem] border border-gray-700 min-h-screen flex flex-row">
+      <Sidebar />
+      <div className="ml-[15rem]">
+        <form onSubmit={handleSearch} className="">
+          <input
+            type="text"
+            placeholder="Search for blogs"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="border rounded px-2 py-1 mr-2"
+          />
+          <input
+            type="text"
+            placeholder="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border rounded px-2 py-1 mr-2"
+          />
+          <input
+            type="text"
+            placeholder="Tag"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            className="border rounded px-2 py-1 mr-2"
+          />
+          <RoundBlueButton text="Search" overwriteClass="px-5 py-2" />
+        </form>
+      </div>
+    </section>
   );
 };
 

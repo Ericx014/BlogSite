@@ -101,7 +101,7 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog, formatDate}) => {
             <AutoTextArea
               required
               ref={blogTextareaRef}
-              overwriteClass="text-md text-justify w-[35rem]"
+              overwriteClass="text-md text-justify"
               value={editBlogContent}
               onChange={(e) => setEditBlogContent(e.target.value)}
             />
@@ -122,7 +122,7 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog, formatDate}) => {
             </div>
           </form>
         ) : (
-          <p className="mb-5 text-justify text-md w-[35rem]">{blog.content}</p>
+          <p className="mb-5 text-justify text-md">{blog.content}</p>
         )}
         <p className="opacity-70">Created on: {formatDate(blog.dateCreated)}</p>
         {blog.dateUpdated && (

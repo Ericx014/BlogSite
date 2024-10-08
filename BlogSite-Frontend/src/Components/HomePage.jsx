@@ -1,84 +1,16 @@
-import {useEffect, useContext, useState, useCallback} from "react";
+import {useContext, useState} from "react";
 import {BlogContext} from "../App";
 import {useNavigate} from "react-router-dom";
 import MainButtons from "./MainButtons";
 import BlogForm from "./BlogForm";
 import BlogsToDisplay from "./BlogsToDisplay";
-import BlogServices from "../services/blogs";
 import Sidebar from "./Sidebar";
 
-const Blogs = () => {
-  const {
-    token,
-    allBlogs,
-    setAllBlogs,
-    userBlogs,
-    setUserBlogs,
-    currentUser,
-    setCurrentBlogId,
-  } = useContext(BlogContext);
+const Blogs = ({}) => {
+  const {setCurrentBlogId, blogsToShow, displayBlogs, setBlogToShow} =
+    useContext(BlogContext);
   const navigate = useNavigate();
-  const [blogsToShow, setBlogToShow] = useState("explore");
-  const [displayBlogs, setDisplayBlogs] = useState([...allBlogs]);
   const [searchResults, setSearchResults] = useState(null);
-
-  useEffect(() => {
-    if (token) {
-      fetchUserBlogs();
-      fetchAllBlogs();
-    }
-  }, [token]);
-
-  // const addNewBlog = useCallback((newBlog) => {
-  //   setAllBlogs((prevBlogs) => [...prevBlogs, newBlog]);
-  //   setUserBlogs((prevBlogs) => [...prevBlogs, newBlog]);
-  // }, []);
-
-  const handleChooseBlog = (choice) => {
-    setBlogToShow(choice);
-  };
-
-  const fetchUserBlogs = async () => {
-    if (token) {
-      try {
-        const responseData = await BlogServices.getUserBlogs(token);
-        setUserBlogs(responseData);
-        console.log(responseData);
-      } catch (error) {
-        console.error("Failed to fetch user blogs:", error);
-      }
-    }
-  };
-
-  const fetchAllBlogs = async () => {
-    if (token) {
-      try {
-        const responseData = await BlogServices.getAllBlogs(token);
-        setAllBlogs(responseData);
-      } catch (error) {
-        console.error("Failed to fetch all blogs:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (searchResults) {
-      setDisplayBlogs(searchResults);
-    } else if (blogsToShow === "explore") {
-      setDisplayBlogs(allBlogs);
-    } else if (blogsToShow === "my posts") {
-      const filteredBlogs = allBlogs.filter(
-        (blog) => blog.blogger === currentUser.username
-      );
-
-      setDisplayBlogs(filteredBlogs);
-    }
-  }, [blogsToShow, allBlogs, userBlogs, searchResults]);
-
-  // const handleSearchResults = (results) => {
-  //   setSearchResults(results);
-  //   setDisplayBlogs(results);
-  // };
 
   const handleBlogSelect = (blogId) => {
     localStorage.setItem("currentBlogId", JSON.stringify(blogId));
@@ -88,8 +20,8 @@ const Blogs = () => {
 
   return (
     <section className="w-[50rem] min-h-screen border border-gray-700 flex flex-row">
-      <Sidebar handleChooseBlog={handleChooseBlog} />
-      <div className="ml-[15rem]">
+      <Sidebar setBlogToShow={setBlogToShow} />
+      <div className="ml-[15rem] w-full">
         {/* <h1 className="font-bold text-lg mb-4">
 					Username: {currentUser.username}
 				</h1>
@@ -107,7 +39,7 @@ const Blogs = () => {
         ) : (
           <>
             <MainButtons
-              handleChooseBlog={handleChooseBlog}
+              setBlogToShow={setBlogToShow}
               blogsToShow={blogsToShow}
             />
             <BlogForm />

@@ -1,10 +1,10 @@
 import ActiveUnderline from "./ActiveUnderline";
 
-const BlogViewButton = ({handleChooseBlog, blogsToShow, buttonFor}) => {	
-	return (
+const BlogViewButton = ({setBlogToShow, blogsToShow, buttonFor}) => {
+  return (
     <button
       className="transition-all border border-none flex-grow hover:bg-gray-700 hover:bg-opacity-50"
-      onClick={() => handleChooseBlog(buttonFor)}
+      onClick={() => setBlogToShow(buttonFor)}
     >
       <div className="flex flex-col items-center  justify-center h-full">
         <span
@@ -14,9 +14,7 @@ const BlogViewButton = ({handleChooseBlog, blogsToShow, buttonFor}) => {
         >
           {buttonFor}
         </span>
-        {blogsToShow === buttonFor && (
-          <ActiveUnderline />
-        )}
+        {blogsToShow === buttonFor && <ActiveUnderline />}
       </div>
     </button>
   );

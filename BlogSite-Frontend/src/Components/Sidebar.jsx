@@ -2,6 +2,7 @@ import LogOutButton from "./LogOutButton";
 import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {BlogContext} from "../App";
+import SidebarHeader from "./SidebarHeader";
 
 const SidebarButton = ({
   text,
@@ -19,7 +20,7 @@ const SidebarButton = ({
   );
 };
 
-const Sidebar = ({handleChooseBlog}) => {
+const Sidebar = ({setBlogToShow}) => {
   const {
     setUsername,
     setToken,
@@ -28,6 +29,7 @@ const Sidebar = ({handleChooseBlog}) => {
     setNotification,
     setNotificationType,
     setIsLoggedIn,
+    currentUser,
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
@@ -49,20 +51,29 @@ const Sidebar = ({handleChooseBlog}) => {
   };
 
   return (
-    <section className="fixed border border-gray-700 w-[15rem] h-screen py-4 px-3 flex flex-col justify-between bg-black">
+    <section className="fixed border border-gray-700 w-[15rem] h-screen py-6 px-3 flex flex-col justify-between bg-black">
       <div className="flex flex-col gap-1">
-        <p className="pt-5 pb-2 px-5 font-bold tracking-wider">USERNAME</p>
+        <SidebarHeader username={currentUser.username} />
+
         <SidebarButton
           text="Home"
           onClick={() => {
             navigate("/blogs");
-						handleChooseBlog("explore")
+            setBlogToShow("explore");
           }}
         />
-        <SidebarButton text="Search" />
+        <SidebarButton
+          text="Search"
+          onClick={() => {
+            navigate("search");
+          }}
+        />
         <SidebarButton
           text="My Blogs"
-          onClick={() => handleChooseBlog("my posts")}
+          onClick={() => {
+            navigate("/blogs");
+            setBlogToShow("my posts");
+          }}
         />
       </div>
       <LogOutButton handleLogout={handleLogout} />
