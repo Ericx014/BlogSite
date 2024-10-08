@@ -4,7 +4,7 @@ const BlogsToDisplay = ({blogs, handleBlogSelect}) => {
       {blogs.map((blog) => (
         <div
           key={blog.id}
-          className="cursor-pointer border-b-[1px] border-gray-700 px-8 py-4"
+          className="cursor-pointer border-b-[1px] border-gray-700 px-8 py-4 hover:bg-gray-900 transition-all"
           onClick={() => handleBlogSelect(blog.id)}
         >
           <div className="flex flex-col leading-4 mb-2">

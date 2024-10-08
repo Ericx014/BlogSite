@@ -26,16 +26,16 @@ const SearchBlogs = ({token, onSearchResults}) => {
   return (
     <section className="w-[50rem] border border-gray-700 min-h-screen flex flex-row">
       <Sidebar />
-      <div className="ml-[15rem]">
-        <form onSubmit={handleSearch} className="">
+      <div className="ml-[15rem] w-full">
+        <form onSubmit={handleSearch} className="px-6 py-5 items-center flex justify-start border-b border-gray-700">
           <input
             type="text"
             placeholder="Search for blogs"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="border rounded px-2 py-1 mr-2"
+            className="border rounded-full px-4 py-1 mr-2 w-[60%]"
           />
-          <input
+          {/* <input
             type="text"
             placeholder="Category"
             value={category}
@@ -48,8 +48,8 @@ const SearchBlogs = ({token, onSearchResults}) => {
             value={tag}
             onChange={(e) => setTag(e.target.value)}
             className="border rounded px-2 py-1 mr-2"
-          />
-          <RoundBlueButton text="Search" overwriteClass="px-5 py-2" />
+          /> */}
+          <RoundBlueButton text="Search" overwriteClass="px-5 py-[0.3rem] w-[7rem]" />
         </form>
       </div>
     </section>

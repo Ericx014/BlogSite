@@ -20,7 +20,7 @@ const SidebarButton = ({
   );
 };
 
-const Sidebar = ({setBlogToShow}) => {
+const Sidebar = () => {
   const {
     setUsername,
     setToken,
@@ -30,6 +30,7 @@ const Sidebar = ({setBlogToShow}) => {
     setNotificationType,
     setIsLoggedIn,
     currentUser,
+		setBlogToShow
   } = useContext(BlogContext);
   const navigate = useNavigate();
 
@@ -65,7 +66,7 @@ const Sidebar = ({setBlogToShow}) => {
         <SidebarButton
           text="Search"
           onClick={() => {
-            navigate("search");
+            navigate("/search");
           }}
         />
         <SidebarButton

@@ -20,7 +20,7 @@ const Blogs = ({}) => {
 
   return (
     <section className="w-[50rem] min-h-screen border border-gray-700 flex flex-row">
-      <Sidebar setBlogToShow={setBlogToShow} />
+      <Sidebar />
       <div className="ml-[15rem] w-full">
         {/* <h1 className="font-bold text-lg mb-4">
 					Username: {currentUser.username}
@@ -38,10 +38,7 @@ const Blogs = ({}) => {
           </div>
         ) : (
           <>
-            <MainButtons
-              setBlogToShow={setBlogToShow}
-              blogsToShow={blogsToShow}
-            />
+            <MainButtons />
             <BlogForm />
           </>
         )}

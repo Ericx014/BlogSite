@@ -224,7 +224,7 @@ const BlogPage = () => {
 
   return (
     <section className="w-[50rem] border border-gray-700 min-h-screen flex flex-row">
-      <Sidebar setBlogToShow={setBlogToShow} />
+      <Sidebar />
       <div className="ml-[15rem] w-[70%]">
         <BlogInfo
           blog={blog}
