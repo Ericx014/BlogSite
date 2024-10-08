@@ -3,6 +3,7 @@ import ThreeDotsIcon from "./ThreeDotsIcon";
 import {Link} from "react-router-dom";
 import {BlogContext} from "../App";
 import RoundBlueButton from "./RoundBlueButton";
+import AutoTextArea from "./AutoTextArea";
 
 const BlogDropdownMenu = ({handleDelete, startEditing, blog}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,9 +65,18 @@ const BlogDropdownMenu = ({handleDelete, startEditing, blog}) => {
   );
 };
 
-const BlogInfo = ({blog, handleDelete, handleEditBlog}) => {
+const BlogInfo = ({blog, handleDelete, handleEditBlog, formatDate}) => {
   const [editBlogId, setEditBlogId] = useState(null);
   const [editBlogContent, setEditBlogContent] = useState("");
+
+  const blogTextareaRef = useRef(null);
+
+  useEffect(() => {
+    if (blogTextareaRef.current) {
+      blogTextareaRef.current.style.height = "auto";
+      blogTextareaRef.current.style.height = `${blogTextareaRef.current.scrollHeight}px`;
+    }
+  }, [editBlogContent]);
 
   const startEditing = (blog) => {
     setEditBlogId(blog.id);
@@ -79,7 +89,7 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog}) => {
   };
 
   return (
-    <section className="flex flex-row px-5 py-3 justify-between">
+    <section className="flex flex-row px-5 py-3 justify-between w-full">
       <div>
         <p className="font-bold text-lg">
           <Link to="/blogs/blogger">{blog.blogger.username}</Link>
@@ -87,14 +97,15 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog}) => {
         <p className="opacity-70 leading-3 mb-3">{blog.blogger.email}</p>
         <h1 className="font-bold text-2xl tracking-wide">{blog.title}</h1>
         {editBlogId === blog.id ? (
-          <form>
-            <textarea
-							required
-              zlassName="text-black"
+          <form className="w-full">
+            <AutoTextArea
+              required
+              ref={blogTextareaRef}
+              overwriteClass="text-md text-justify w-[35rem]"
               value={editBlogContent}
               onChange={(e) => setEditBlogContent(e.target.value)}
-            ></textarea>
-            <div className="flex flex-row gap-2">
+            />
+            <div className="flex flex-row gap-2 my-3">
               <RoundBlueButton
                 onClick={(e) => {
                   handleEditBlog(e, editBlogContent);
@@ -111,11 +122,11 @@ const BlogInfo = ({blog, handleDelete, handleEditBlog}) => {
             </div>
           </form>
         ) : (
-          <p className="mb-5 text-justify">{blog.content}</p>
+          <p className="mb-5 text-justify text-md w-[35rem]">{blog.content}</p>
         )}
-        <p className="opacity-70">Created on: {blog.dateCreated}</p>
+        <p className="opacity-70">Created on: {formatDate(blog.dateCreated)}</p>
         {blog.dateUpdated && (
-          <p className="opacity-70">Updated: {blog.dateUpdated}</p>
+          <p className="opacity-70">Updated: {formatDate(blog.dateUpdated)}</p>
         )}
       </div>
       <BlogDropdownMenu

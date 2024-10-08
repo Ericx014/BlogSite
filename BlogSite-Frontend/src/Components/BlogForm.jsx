@@ -47,7 +47,7 @@ const BlogForm = () => {
     <section className="border-b-[2px] border-gray-700">
       <form onSubmit={handleCreate}>
         <AutoTextArea
-          overwriteClass="p-8"
+          overwriteClass="p-8 text-xl"
           ref={textareaRef}
           placeholder="Tell us your story!"
           value={content}

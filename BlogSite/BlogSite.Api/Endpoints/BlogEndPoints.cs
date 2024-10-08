@@ -337,7 +337,7 @@ namespace BlogSite.Api.Endpoints
             }
 
             blog.Content = requestBlog.Content;
-            blog.Category = requestBlog.Category;
+            //blog.Category = requestBlog.Category;
             blog.DateUpdated = DateTime.UtcNow;
 
             //var newTagNames = request.Blog.BlogTags.Select(bt => bt.Tag.TagName.ToLower()).ToList();

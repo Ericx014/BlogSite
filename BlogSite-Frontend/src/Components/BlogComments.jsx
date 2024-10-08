@@ -12,6 +12,7 @@ const BlogComments = ({
   handleCommentDelete,
   handleCommentEdit,
   currentUser,
+	formatDate
 }) => {
   const commentAreaRef = useRef(null);
 
@@ -79,7 +80,7 @@ const BlogComments = ({
                   <p>{comment.content}</p>
                 )}
                 <p className="text-sm text-gray-500 mt-1">
-                  {comment.dateCreated}
+                  {formatDate(comment.dateCreated)}
                 </p>
               </div>
               {(comment.user === currentUser?.username ||

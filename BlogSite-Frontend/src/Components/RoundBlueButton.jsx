@@ -4,7 +4,7 @@ const RoundBlueButton = ({text, overwriteClass = "", onClick = () => {}}) => {
 			type="submit"
       onClick={onClick}
       className={`bg-[#1d9bf0] font-semibold rounded-full ${overwriteClass}`}
-    >
+		>
       {text}
     </button>
   );

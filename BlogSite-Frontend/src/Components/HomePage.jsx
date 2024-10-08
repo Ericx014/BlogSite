@@ -4,23 +4,16 @@ import {useNavigate} from "react-router-dom";
 import MainButtons from "./MainButtons";
 import BlogForm from "./BlogForm";
 import BlogsToDisplay from "./BlogsToDisplay";
-import LogOutButton from "./LogOutButton";
 import BlogServices from "../services/blogs";
 
 const Blogs = () => {
   const {
-    setUsername,
     token,
-    setToken,
     allBlogs,
     setAllBlogs,
     userBlogs,
     setUserBlogs,
-    setNotification,
-    setNotificationType,
-    currentUser,
     setCurrentBlogId,
-    setIsLoggedIn,
   } = useContext(BlogContext);
   const navigate = useNavigate();
   const [blogsToShow, setBlogToShow] = useState("random");
@@ -87,55 +80,39 @@ const Blogs = () => {
     navigate("blogpage");
   };
 
-  const handleLogout = () => {
-    setToken("");
-    setUserBlogs([]);
-    setAllBlogs([]);
-    setUsername("");
-    setNotification("Logged out successfully");
-    setNotificationType("success");
-    setIsLoggedIn(false);
-
-    localStorage.removeItem("logInStatus");
-    localStorage.removeItem("blogUser");
-    localStorage.removeItem("blogsiteToken");
-    localStorage.removeItem("currentBlogId");
-
-    navigate("/");
-  };
-
   return (
     <section
-      className="w-[40rem] min-h-screen border border-gray-700"
+      className="w-[40rem] min-h-screen border border-gray-700 flex flex-row"
     >
-      {/* <h1 className="font-bold text-lg mb-4">
-        Username: {currentUser.username}
-      </h1>
-      <SearchBlogs token={token} onSearchResults={handleSearchResults} /> */}
-      {searchResults ? (
-        <div className="flex flex-row">
-          <h2 className="font-bold">Search results</h2>
-          <button
-            className="bg-white border border-black px-2"
-            onClick={() => setSearchResults(null)}
-          >
-            Back
-          </button>
-        </div>
-      ) : (
-        <>
-          <MainButtons
-            handleChooseBlog={handleChooseBlog}
-            blogsToShow={blogsToShow}
-          />
-          <BlogForm />
-        </>
-      )}
-      <BlogsToDisplay
-        blogs={displayBlogs}
-        handleBlogSelect={handleBlogSelect}
-      />
-      <LogOutButton handleLogout={handleLogout} />
+      <div>
+				{/* <h1 className="font-bold text-lg mb-4">
+					Username: {currentUser.username}
+				</h1>
+				<SearchBlogs token={token} onSearchResults={handleSearchResults} /> */}
+				{searchResults ? (
+					<div className="flex flex-row">
+						<h2 className="font-bold">Search results</h2>
+						<button
+							className="bg-white border border-black px-2"
+							onClick={() => setSearchResults(null)}
+						>
+							Back
+						</button>
+					</div>
+				) : (
+					<>
+						<MainButtons
+							handleChooseBlog={handleChooseBlog}
+							blogsToShow={blogsToShow}
+						/>
+						<BlogForm />
+					</>
+				)}
+				<BlogsToDisplay
+					blogs={displayBlogs}
+					handleBlogSelect={handleBlogSelect}
+				/>
+			</div>
     </section>
   );
 };

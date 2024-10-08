@@ -72,6 +72,21 @@ const BlogPage = () => {
     fetchUserLikedBlogs();
   }, [currentUser, token, isLoggedIn]);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return formatter.format(date);
+  };
+
   const handleLike = async (blogId, userId) => {
     try {
       if (isLiked) {
@@ -216,6 +231,7 @@ const BlogPage = () => {
           isLiked={isLiked}
           handleLike={handleLike}
           handleEditBlog={handleEditBlog}
+          formatDate={formatDate}
         />
         <Divider />
         <BlogDetails
@@ -225,6 +241,7 @@ const BlogPage = () => {
           handleDelete={handleDelete}
           currentUser={currentUser}
           handleLike={handleLike}
+          formatDate={formatDate}
         />
         <Divider />
         <BlogTags blog={blog} setBlog={setBlog} />
@@ -237,6 +254,7 @@ const BlogPage = () => {
           handleCommentDelete={handleCommentDelete}
           handleCommentEdit={handleCommentEdit}
           currentUser={currentUser}
+          formatDate={formatDate}
         />
       </>
     </div>

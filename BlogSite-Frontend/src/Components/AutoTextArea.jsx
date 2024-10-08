@@ -6,7 +6,7 @@ const AutoTextArea = forwardRef(
       <textarea
         required
         ref={ref}
-        className={`focus:outline-none bg-transparent resize-none text-xl w-full ${overwriteClass}`}
+        className={`focus:outline-none bg-transparent resize-none text-md w-full ${overwriteClass}`}
         placeholder={placeholder}
         type="text"
         value={value}

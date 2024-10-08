@@ -7,6 +7,7 @@ import BlogPage from "./Components/BlogPage";
 import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
 import SearchBlogs from "./Components/SearchBlogs";
+import Sidebar from "./Components/Sidebar";
 
 export const BlogContext = createContext();
 
@@ -66,8 +67,8 @@ const App = () => {
   }, []);
 
   return (
-    <section className="font-roboto bg-black text-white flex flex-row justify-center">
-      <div>
+    <section className="font-roboto bg-black text-white">
+      <div className="flex flex-row justify-center">
         <BlogContext.Provider
           value={{
             token,
@@ -95,6 +96,9 @@ const App = () => {
           }}
         >
           <BrowserRouter>
+            {location.pathname !== "/" && location.pathname !== "/register" && (
+              <Sidebar />
+            )}
             <Routes>
               <Route index element={<Login />} />
               <Route path="/blogs" element={<HomePage />} />
