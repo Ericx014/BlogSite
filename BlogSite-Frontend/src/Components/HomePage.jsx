@@ -7,16 +7,9 @@ import BlogsToDisplay from "./BlogsToDisplay";
 import Sidebar from "./Sidebar";
 
 const Blogs = ({}) => {
-  const {setCurrentBlogId, blogsToShow, displayBlogs, setBlogToShow} =
+  const {displayBlogs} =
     useContext(BlogContext);
-  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(null);
-
-  const handleBlogSelect = (blogId) => {
-    localStorage.setItem("currentBlogId", JSON.stringify(blogId));
-    setCurrentBlogId(blogId);
-    navigate("blogpage");
-  };
 
   return (
     <section className="w-[50rem] min-h-screen border border-gray-700 flex flex-row">
@@ -44,7 +37,6 @@ const Blogs = ({}) => {
         )}
         <BlogsToDisplay
           blogs={displayBlogs}
-          handleBlogSelect={handleBlogSelect}
         />
       </div>
     </section>
