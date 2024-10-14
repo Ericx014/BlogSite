@@ -382,13 +382,15 @@ namespace BlogSite.Api.Endpoints
             if (!string.IsNullOrWhiteSpace(query))
             {
                 blogsQuery = blogsQuery.Where(b =>
-                    b.Title.Contains(query) ||
-                    b.Content.Contains(query));
+                    b.Title.ToLower().Contains(query.ToLower()) ||
+                    b.Content.ToLower().Contains(query.ToLower()));
             }
 
             if (!string.IsNullOrWhiteSpace(category))
             {
-                blogsQuery = blogsQuery.Where(b => b.Category == category);
+                //blogsQuery = blogsQuery.Where(b =>
+                //    b.Category.Contains(query));
+                blogsQuery = blogsQuery.Where(b => b.Category.ToLower() == category.ToLower());
             }
 
             if (!string.IsNullOrWhiteSpace(tag))
