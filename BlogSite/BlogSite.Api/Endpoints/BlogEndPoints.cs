@@ -379,6 +379,13 @@ namespace BlogSite.Api.Endpoints
                     .ThenInclude(bt => bt.Tag)
                 .AsQueryable();
 
+            if (string.IsNullOrWhiteSpace(query) &&
+                string.IsNullOrWhiteSpace(category) &&
+                string.IsNullOrWhiteSpace(tag))
+            {
+                return Results.Ok(new List<object>()); // Return an empty list if no search criteria
+            }
+
             if (!string.IsNullOrWhiteSpace(query))
             {
                 blogsQuery = blogsQuery.Where(b =>
