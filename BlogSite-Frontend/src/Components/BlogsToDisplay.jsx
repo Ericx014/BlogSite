@@ -13,7 +13,7 @@ const BlogsToDisplay = ({blogs}) => {
   };
 
   return (
-    <section className="">
+    <section className="w-full">
       {blogs.map((blog) => (
         <div
           key={blog.id}

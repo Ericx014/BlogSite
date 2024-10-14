@@ -1,5 +1,5 @@
 import {useState, useContext} from "react";
-import { BlogContext } from "../App";
+import {BlogContext} from "../App";
 import BlogServices from "../services/blogs";
 import Sidebar from "./Sidebar";
 import RoundBlueButton from "./RoundBlueButton";
@@ -7,11 +7,11 @@ import BlogsToDisplay from "./BlogsToDisplay";
 
 const SearchBlogs = () => {
   const [query, setQuery] = useState("");
-	// const [searchResults, setSearchResults] = useState(null);
+  // const [searchResults, setSearchResults] = useState(null);
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
-	const [foundBlogs, setFoundBlogs] = useState(null);
-	const {token} = useContext(BlogContext);
+  const [foundBlogs, setFoundBlogs] = useState(null);
+  const {token} = useContext(BlogContext);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -22,14 +22,14 @@ const SearchBlogs = () => {
         tag,
       });
       console.log("Search response:", response);
-			setQuery("");
-			setCategory("");
-			setTag("");
+      setQuery("");
+      setCategory("");
+      setTag("");
       setFoundBlogs(response);
     } catch (error) {
       console.error("Failed to search blogs:", error);
-			setFoundBlogs([]);
-		}
+      setFoundBlogs([]);
+    }
   };
 
   return (
@@ -40,27 +40,27 @@ const SearchBlogs = () => {
           onSubmit={handleSearch}
           className="px-6 py-5 border-b border-gray-700 flex flex-col gap-5"
         >
-          <div className="flex flex-row w-full">
-            <input
-							required
-              type="text"
-              placeholder="Search for blogs"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="text-black border rounded-full px-4 py-1 mr-2 w-[60%]"
-            />
-            <RoundBlueButton
-              text="Search"
-              overwriteClass="px-5 py-[0.3rem] w-[7rem]"
-            />
-          </div>
           <input
+            required
             type="text"
-            placeholder="Category (optional)"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="focus:placeholder-transparent border border-gray-500 text-[0.9rem] bg-black rounded-md h-6 w-56 px-3 py-5"
+            placeholder="Search for blogs"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="text-black border rounded-full px-4 py-1 mr-2 w-[60%] focus:placeholder-transparent focus:outline-none"
           />
+          <div className="flex flex-row w-full justify-between">
+						<input
+							type="text"
+							placeholder="Category (optional)"
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+							className="focus:placeholder-transparent border border-gray-500 bg-black rounded-full text-[0.9rem] h-6 w-56 px-4 py-4"
+						/>
+						<RoundBlueButton
+							text="Search"
+							overwriteClass="px-5 py-[0.3rem] w-[7rem]"
+						/>
+					</div>
           {/* <input
 							type="text"
 							placeholder="Tag"
