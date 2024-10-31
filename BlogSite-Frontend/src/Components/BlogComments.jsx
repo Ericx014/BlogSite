@@ -89,10 +89,11 @@ const BlogComments = ({
                   <DropdownMenu
                     onEdit={() => startEditing(comment)}
                     onDelete={() => handleCommentDelete(comment.id)}
-										comment={comment}
+                    comment={comment}
                   />
                 )}
-              {/* <button onClick={() => console.log(comment)}>Comment deet</button> */}
+              <button onClick={() => console.log(comment)}>Comment deet</button>
+              <button onClick={() => console.log(currentUser)}>Current deet</button>
             </div>
             <Divider />
           </div>

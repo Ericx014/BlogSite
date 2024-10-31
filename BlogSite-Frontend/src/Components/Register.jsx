@@ -2,7 +2,7 @@ import {useState, useContext} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import {BlogContext} from "../App";
 import UserServices from "../services/users";
-import DarkInput from "./DarkInput";
+// import DarkInput from "./DarkInput";
 
 const Register = ({setIsModalOpen}) => {
   const [newUsername, setNewUsername] = useState("");

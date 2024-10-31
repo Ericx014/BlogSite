@@ -19,7 +19,7 @@ const BlogPage = () => {
     isLoggedIn,
     currentUser,
     setUserLikedBlogs,
-		setBlogToShow
+    setBlogToShow,
   } = useContext(BlogContext);
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -139,6 +139,7 @@ const BlogPage = () => {
           {
             id: responseData.id,
             user: responseData.author,
+            userId: responseData.userId,
             content: responseData.content,
             dateCreated: responseData.dateCreated,
           },
