@@ -45,10 +45,11 @@ namespace BlogSite.Api.Endpoints
 
             var createdComment = new
             {
-                Id = comment.Id,
-                Author = user.Username,
-                Content = comment.Content,
-                DateCreated = comment.DateCreated
+                id = comment.Id,
+                author = user.Username,
+								userId = user.Id,
+                content = comment.Content,
+                dateCreated = comment.DateCreated
             };
 
             return Results.Created($"/comments/{comment.Id}", createdComment);
