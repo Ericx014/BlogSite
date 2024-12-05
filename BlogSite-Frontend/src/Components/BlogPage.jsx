@@ -19,7 +19,6 @@ const BlogPage = () => {
     isLoggedIn,
     currentUser,
     setUserLikedBlogs,
-    setBlogToShow,
   } = useContext(BlogContext);
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

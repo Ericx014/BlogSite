@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useState, useContext, useEffect} from "react";
-import {BlogContext} from "../App";
+import { useRootContext } from "../App";
 import AuthServices from "../services/login";
 import UserServices from "../services/users";
 import LoginForm from "./LoginForm";
@@ -14,14 +14,12 @@ const Login = () => {
     setUsername,
     setPassword,
     setToken,
-    notification,
     setNotification,
-    notificationType,
     setNotificationType,
     setCurrentUser,
     isLoggedIn,
     setIsLoggedIn,
-  } = useContext(BlogContext);
+  } = useRootContext();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,15 +32,15 @@ const Login = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    if (notification) {
-      const timeout = setTimeout(() => {
-        setNotification("");
-        setNotificationType("");
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [notification, notificationType, setNotification, setNotificationType]);
+  // useEffect(() => {
+  //   if (notification) {
+  //     const timeout = setTimeout(() => {
+  //       setNotification("");
+  //       setNotificationType("");
+  //     }, 3000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [notification, notificationType, setNotification, setNotificationType]);
 
   useEffect(() => {
     const logOutTimer = setTimeout(() => {
@@ -58,12 +56,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const responseData = await AuthServices.login(username, password);
-      console.log(responseData);
       loginSuccess(responseData, username);
     } catch (error) {
       loginFail(error);
     }
   };
+
   const loginSuccess = async (responseData, loggedInUsername) => {
     localStorage.setItem("blogsiteToken", JSON.stringify(responseData.token));
     setToken(responseData.token);
@@ -83,6 +81,11 @@ const Login = () => {
   const loginFail = (error) => {
     setNotification("Wrong username or password");
     setNotificationType("error");
+
+		setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 3000);
 
     console.error("Login failed:", error);
   };
@@ -114,7 +117,7 @@ const Login = () => {
         <div className="flex flex-col gap-2">
           <button
             onClick={openModal}
-            className="font-semibold text-[#1d9bf0] tracking-wide rounded-full border border-white h-10 w-72"
+            className="font-semibold text-[#1d9bf0] tracking-wide rounded-full border border-white h-10 w-72  hover:bg-white hover:text-black hover:border-white hover:border-[2px]"
           >
             Create an account
           </button>
@@ -136,9 +139,7 @@ const Login = () => {
             >
               ×
             </button>{" "}
-            {/* Close modal button */}
             <Register setIsModalOpen={setIsModalOpen} />{" "}
-            {/* Render Register component */}
           </div>
         </div>
       )}

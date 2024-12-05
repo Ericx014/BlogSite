@@ -92,8 +92,8 @@ const BlogComments = ({
                     comment={comment}
                   />
                 )}
-              <button onClick={() => console.log(comment)}>Comment deet</button>
-              <button onClick={() => console.log(currentUser)}>Current deet</button>
+              {/* <button onClick={() => console.log(comment)}>Comment deet</button>
+              <button onClick={() => console.log(currentUser)}>Current deet</button> */}
             </div>
             <Divider />
           </div>

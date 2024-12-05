@@ -1,5 +1,5 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {useState, useEffect, createContext} from "react";
+import {useContext, useState, useEffect, createContext} from "react";
 import HomePage from "./Components/HomePage";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
@@ -7,7 +7,7 @@ import BlogPage from "./Components/BlogPage";
 import BloggerPage from "./Components/BloggerPage";
 import BlogServices from "./services/blogs";
 import SearchBlogs from "./Components/SearchBlogs";
-import { useNavigate } from "react-router-dom";
+import useLocalStorage from "./Components/hooks/useLocalStorage";
 
 export const BlogContext = createContext();
 
@@ -20,32 +20,25 @@ const App = () => {
   const [notificationType, setNotificationType] = useState("");
   const [userLikedBlogs, setUserLikedBlogs] = useState([]);
 
-  const storedLogInStatus =
-    JSON.parse(localStorage.getItem("logInStatus")) || false;
-  const [isLoggedIn, setIsLoggedIn] = useState(storedLogInStatus);
-
-  const storedUser = JSON.parse(localStorage.getItem("blogUser")) || null;
-  const [currentUser, setCurrentUser] = useState(storedUser);
-
-  const storedToken = JSON.parse(localStorage.getItem("blogsiteToken")) || null;
-  const [token, setToken] = useState(storedToken);
-
-  const storedCurrentBlogId = localStorage.getItem("currentBlogId")
-    ? JSON.parse(localStorage.getItem("currentBlogId"))
-    : null;
-  const [currentBlogId, setCurrentBlogId] = useState(storedCurrentBlogId);
+  const [isLoggedIn, setIsLoggedIn] = useLocalStorage("loginStatus", false);
+  const [currentUser, setCurrentUser] = useLocalStorage("blogUser", null);
+  const [token, setToken] = useLocalStorage("blogsiteToken", null)
+  const [currentBlogId, setCurrentBlogId] = useLocalStorage(
+    "currentBlogId",
+    null
+  );
 
   const [blogsToShow, setBlogToShow] = useState("explore");
   const [displayBlogs, setDisplayBlogs] = useState([...allBlogs]);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (storedToken && isLoggedIn) {
+      if (token && isLoggedIn) {
         try {
-          const allBlogsData = await BlogServices.getAllBlogs(storedToken);
+          const allBlogsData = await BlogServices.getAllBlogs(token);
           setAllBlogs(allBlogsData);
-          if (storedUser) {
-            const userBlogsData = await BlogServices.getUserBlogs(storedToken);
+          if (currentUser) {
+            const userBlogsData = await BlogServices.getUserBlogs(token);
             setUserBlogs(userBlogsData);
           }
         } catch (error) {
@@ -143,6 +136,10 @@ const App = () => {
       </BlogContext.Provider>
     </section>
   );
+};
+
+export const useRootContext = () => {
+  return useContext(BlogContext);
 };
 
 export default App;

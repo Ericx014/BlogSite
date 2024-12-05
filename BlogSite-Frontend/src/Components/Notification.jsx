@@ -1,18 +1,20 @@
-import { useContext } from "react";
-import { BlogContext } from "../App";
+import {useRootContext} from "../App";
 
 const Notification = () => {
-	const {notification, notificationType} = useContext(BlogContext);
+  const {notification, notificationType} = useRootContext();
 
-	return (
-    <>
-      {notification && (
-        <p className={`border border-black p-2 mb-4 rounded-md text-black`}>
-          {notification}
-        </p>
-      )}
-    </>
+  if (!notification) return null;
+
+  const bgColor = notificationType === "error" ? "bg-red-600" : "bg-green-600";
+
+  return (
+    <div
+      className={`${bgColor}  fixed top-4 left-1/2 transform -translate-x-1/2
+			text-white px-4 py-2 rounded-md z-50 text-center`}
+    >
+      {notification}
+    </div>
   );
-}
+};
 
 export default Notification;
